@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vendor Credibility</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#111;--surface:#181818;--surface2:#1e1e1e;--border:#262626;
+  --text:#c8c8c8;--text2:#888;--text3:#555;--white:#eee;
+  --accent:#7c9aff;--green:#4ade80;--yellow:#fbbf24;--red:#f87171;--orange:#fb923c;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;height:100vh;overflow:hidden;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+::selection{background:#7c9aff33}
+
+/* Top bar */
+.topbar{padding:14px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;flex-shrink:0;background:var(--bg)}
+.topbar h1{font-size:15px;color:var(--white);font-weight:600;letter-spacing:-.2px}
+.topbar input{width:100%;max-width:240px;padding:7px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;transition:border-color .15s}
+.topbar input:focus{border-color:var(--accent)}
+.topbar .meta{color:var(--text3);font-size:12px;margin-left:auto}
+.focus-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--text2);user-select:none;margin-left:12px}
+.focus-toggle input{display:none}
+.focus-toggle .pill{width:32px;height:18px;background:var(--border);border-radius:9px;position:relative;transition:background .2s}
+.focus-toggle .pill::after{content:'';position:absolute;width:14px;height:14px;background:var(--text2);border-radius:50%;top:2px;left:2px;transition:transform .2s,background .2s}
+.focus-toggle input:checked+.pill{background:var(--accent)}
+.focus-toggle input:checked+.pill::after{transform:translateX(14px);background:var(--white)}
+
+/* Layout */
+.layout{display:flex;flex:1;overflow:hidden}
+.sidebar{width:260px;border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0;background:var(--bg)}
+.sidebar-item{padding:14px 18px;cursor:pointer;transition:background .12s;border-bottom:1px solid #1a1a1a}
+.sidebar-item:hover{background:var(--surface)}
+.sidebar-item.active{background:var(--surface);border-left:2px solid var(--accent);padding-left:16px}
+.sidebar-item .si-name{font-size:14px;color:var(--white);font-weight:500}
+.sidebar-item .si-row{display:flex;align-items:center;gap:8px;margin-top:5px}
+.sidebar-item .si-score{font-size:20px;font-weight:700}
+.sidebar-item .si-tier{font-size:11px;color:var(--text2)}
+.sidebar-item .si-date{font-size:11px;color:var(--text3);margin-top:2px}
+.empty-state{padding:48px 24px;text-align:center;color:var(--text3);font-size:13px}
+
+/* Main */
+.main{flex:1;overflow-y:auto;scroll-behavior:smooth}
+
+/* Detail header — minimal */
+.detail-header{padding:32px 40px 24px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:10}
+.dh-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+.dh-company{font-size:22px;color:var(--white);font-weight:600;letter-spacing:-.3px}
+.dh-meta{color:var(--text3);font-size:13px;margin-top:4px}
+.dh-meta a{color:var(--text2)}
+.dh-score{text-align:right}
+.dh-score .big{font-size:40px;font-weight:700;line-height:1}
+.dh-score .of{font-size:13px;color:var(--text3);font-weight:400}
+.dh-tier{display:inline-block;padding:3px 12px;border-radius:6px;font-size:11px;font-weight:600;margin-top:6px;letter-spacing:.2px}
+
+/* Tier colors */
+.t-premium{background:#4ade8018;color:var(--green)}.t-strong{background:#7c9aff18;color:var(--accent)}.t-capable{background:#fbbf2418;color:var(--yellow)}.t-commodity{background:#fb923c18;color:var(--orange)}.t-weak{background:#f8717118;color:var(--red)}.t-low{background:#991b1b18;color:#fca5a5}
+
+/* Content area */
+.content{padding:24px 40px 48px;max-width:860px}
+
+/* Executive summary */
+.exec{padding:24px 0;margin-bottom:8px}
+.exec-headline{font-size:15px;color:var(--white);font-weight:500;margin-bottom:16px}
+.exec ul{list-style:none}
+.exec li{padding:7px 0;font-size:14px;color:var(--text);border-bottom:1px solid #1f1f1f}
+.exec li:last-child{border-bottom:none}
+.exec li strong{color:var(--white);font-weight:500}
+.exec-decision{margin-top:20px;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:8px}
+.exec-decision .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ed-go{background:#4ade8010;color:var(--green)}.ed-go .dot{background:var(--green)}
+.ed-no{background:#f8717110;color:var(--red)}.ed-no .dot{background:var(--red)}
+.ed-maybe{background:#fbbf2410;color:var(--yellow)}.ed-maybe .dot{background:var(--yellow)}
+
+/* Accordion */
+.accordion{border-top:1px solid var(--border)}
+.acc-header{display:flex;align-items:center;padding:16px 0;cursor:pointer;user-select:none;transition:opacity .12s}
+.acc-header:hover{opacity:.85}
+.acc-title{font-size:14px;color:var(--white);font-weight:500;flex-shrink:0}
+.acc-preview{font-size:12px;color:var(--text3);margin-left:12px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acc-chevron{width:16px;height:16px;flex-shrink:0;margin-left:8px;transition:transform .2s;color:var(--text3)}
+.acc-chevron svg{display:block}
+.accordion.open .acc-chevron{transform:rotate(90deg)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .25s ease-out,opacity .2s;opacity:0}
+.accordion.open .acc-body{max-height:9999px;opacity:1;transition:max-height .35s ease-in,opacity .25s}
+.acc-inner{padding:0 0 24px}
+
+/* Shared detail styles */
+.dg{display:grid;grid-template-columns:150px 1fr;gap:6px 16px;font-size:13px}
+.dg dt{color:var(--text3)}
+.dg dd{color:var(--text)}
+.dg dd a{color:var(--accent)}
+.tag{display:inline-block;padding:1px 7px;background:var(--surface2);border-radius:4px;font-size:11px;color:var(--text2);margin:1px}
+
+/* Score bar — minimal */
+.sb{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sb-label{width:180px;font-size:12px;color:var(--text3);flex-shrink:0}
+.sb-track{flex:1;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden}
+.sb-fill{height:100%;border-radius:2px}
+.sb-fill.g{background:var(--green)}.sb-fill.y{background:var(--yellow)}.sb-fill.r{background:var(--red)}
+.sb-val{width:32px;text-align:right;font-size:12px;font-weight:600}
+.sb-val.g{color:var(--green)}.sb-val.y{color:var(--yellow)}.sb-val.r{color:var(--red)}
+
+/* Leader table — minimal */
+.lt{width:100%;font-size:12px;border-collapse:collapse}
+.lt th{text-align:left;padding:8px 8px;color:var(--text3);font-weight:400;border-bottom:1px solid var(--border)}
+.lt td{padding:8px;border-bottom:1px solid #1a1a1a;color:var(--text);vertical-align:top}
+.lt td a{color:var(--accent)}
+.lt .name{color:var(--white);font-weight:500}
+
+/* Rec cards — minimal */
+.rec{padding:14px 0;border-bottom:1px solid #1f1f1f}
+.rec:last-child{border-bottom:none}
+.rec-label{font-size:11px;color:var(--text3);margin-bottom:2px}
+.rec-val{font-size:14px;color:var(--white);font-weight:500}
+.rec-detail{font-size:12px;color:var(--text2);margin-top:3px}
+
+/* Discovery questions — minimal */
+.dq{padding:14px 0;border-bottom:1px solid #1f1f1f}
+.dq:last-child{border-bottom:none}
+.dq-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.dq-cat{font-size:10px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.dq-prio{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.dq-prio.hi{color:var(--red)}.dq-prio.med{color:var(--yellow)}.dq-prio.lo{color:var(--green)}
+.dq-q{font-size:14px;color:var(--white);font-weight:400;line-height:1.6;cursor:pointer;padding:2px 0}
+.dq-q:hover{color:var(--accent)}
+.dq-detail{max-height:0;overflow:hidden;opacity:0;transition:max-height .2s,opacity .15s}
+.dq.expanded .dq-detail{max-height:600px;opacity:1;transition:max-height .3s,opacity .2s}
+.dq-obj{font-size:12px;color:var(--text3);font-style:italic;margin:8px 0}
+.dq-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:768px){.dq-cols{grid-template-columns:1fr}}
+.dq-col{padding:10px 12px;border-radius:6px;font-size:12px}
+.dq-col h5{font-size:10px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600}
+.dq-col ul{list-style:none}
+.dq-col li{padding:2px 0;color:var(--text2);line-height:1.4}
+.dq-col.strong{background:#4ade800a}.dq-col.strong h5{color:var(--green)}
+.dq-col.weak{background:#f871710a}.dq-col.weak h5{color:var(--red)}
+.show-more{font-size:12px;color:var(--accent);cursor:pointer;padding:10px 0;display:inline-block}
+.show-more:hover{text-decoration:underline}
+
+/* Guide panel */
+.guide{margin-top:16px;padding:16px;background:var(--surface);border-radius:8px}
+.guide h4{font-size:13px;color:var(--white);font-weight:500;margin-bottom:10px}
+.guide-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:768px){.guide-cols{grid-template-columns:1fr}}
+.guide-col ul{list-style:none;font-size:12px}
+.guide-col li{padding:2px 0}
+.guide-col.lean li{color:var(--green)}
+.guide-col.walk li{color:var(--red)}
+.guide-col h5{font-size:10px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600;color:var(--text3)}
+
+/* Source links */
+.src-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:768px){.src-grid{grid-template-columns:1fr}}
+.src-group h4{font-size:11px;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;font-weight:500}
+.src-group ul{list-style:none;margin-bottom:12px}
+.src-group li{padding:2px 0}
+.src-group li a{font-size:12px;word-break:break-all}
+
+/* Confidence */
+.conf{font-size:11px;font-weight:500}
+.conf-high{color:var(--green)}.conf-med{color:var(--yellow)}.conf-low{color:var(--red)}
+
+/* Focus mode */
+.focus-active .accordion:not(.focus-visible){display:none}
+
+/* Misc */
+.note{font-size:12px;color:var(--text3);margin-top:6px}
+.divider{border:none;border-top:1px solid #1f1f1f;margin:12px 0}
+.timestamp{text-align:center;color:var(--text3);font-size:11px;padding:32px 0}
+
+@media(max-width:768px){.sidebar{width:200px}.content,.detail-header{padding-left:24px;padding-right:24px}}
+@media print{body{background:#fff;color:#000}.accordion .acc-body{max-height:9999px;opacity:1}a{color:#0066cc}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>Vendor Credibility</h1>
+  <input type="text" id="search" placeholder="Search vendors...">
+  <div class="meta" id="count"></div>
+  <label class="focus-toggle" title="Only show summary, recommendation, and top questions">
+    <input type="checkbox" id="focusToggle">
+    <span class="pill"></span>
+    Focus
+  </label>
+</div>
+
+<div class="layout">
+  <div class="sidebar" id="sidebar"></div>
+  <div class="main" id="main"></div>
+</div>
+
+<script>
+const ASSESSMENTS = [{"id":"barrel","date":"2026-04-06","company":{"name":"Barrel","domain":"barrelny.com","website":"https://www.barrelny.com","description":"CPG commerce agency specializing in Shopify Plus builds, redesigns, and migrations for food/bev, beauty, and home/garden brands.","services":["Shopify Plus","Ecommerce Design","CRO","Retention Marketing","B2B Commerce","Headless","Custom Apps","Branding"],"geography":"New York, NY (HQ) + Los Angeles. Globally distributed.","size":"10-75 employees","founded":"2006","years_in_operation":20,"shopify_status":"Shopify Premier Partner (highest tier). Partner since 2009, Plus since 2017.","named_clients":["McCormick","L'Oreal Paris","Sweet Loren's","Bobo's","The Outset","Once Upon a Farm","Kind Snacks","Cabot Creamery","Dr. Jart+","Black+Decker","ScottsMiracle-Gro","Cariuma","Barry's","Hu","Canyon Bakehouse","Instant Pot","Fire Dept Coffee"],"client_mix":"50% midmarket ($10M-$1B), 30% SMB, 20% enterprise","reviews_summary":"Clutch: listed but no client reviews. Glassdoor: 3.2/5 (19 reviews, 44% recommend). Shopify directory: no reviews.","website_quality":"Professional, clean, well-structured. Case studies have depth. Blog/newsletter signal active thought leadership.","positioning":"CPG-focused Shopify specialist boutique. Premium pricing ($150-199/hr, $50K+ minimum).","red_flags":["Zero Clutch reviews despite 20 years","Glassdoor 3.2/5 (44% recommend)","Founding team stepped back to Holdings in 2024"],"positive_signals":["Shopify Premier Partner (highest tier)","20-year track record","Real enterprise clients (McCormick, L'Oreal)","DTC Patterns research (300+ articles)","Minority-owned business","Parent holding company (Barrel Holdings)"]},"sender":{"name":"Lucas Ballasy","title":"CEO, Partner","email":"lucas.ballasy@barrelny.com","linkedin":"https://www.linkedin.com/in/lucasjballasy/","linkedin_confidence":"high","background":"Tyler School of Art (Temple University). Joined Barrel as freelance designer in 2013. Rose to Partner & CEO. Co-founded Barrel Venture Partners (2019). Helped launch Barrel Holdings (2021). Based in Bucks County, PA.","credibility_signals":["CEO personally replying (not delegating to BDM)","Uses Superhuman","Personal blog (lucasballasy.com)","13 years at company","Co-founded venture arm"],"concerns":["Rose internally from designer — may be stronger on design/brand than strategy/tech","Not the original founder (Kang & Kim founded in 2006)"],"sub_scores":{"seniority":9,"experience":8,"credibility":8,"communication":6.5,"trustworthiness":8},"score":7.9,"score_rationale":"CEO personally replied. Strong tenure and credibility. Communication was warm but not strategically sharp — felt like CEO validating a BDM's outreach rather than leading with insight."},"leadership":[{"name":"Lucas Ballasy","title":"CEO & Partner","linkedin":"https://www.linkedin.com/in/lucasjballasy/","background":"Temple Univ. (Art). At Barrel since 2013. Freelance designer to CEO. Co-founded Barrel Venture Partners.","strengths":"13 years tenure, active content creator, venture arm shows strategic ambition","risks":"Design background, not a technical or strategy-first operator. Not the original founder.","score":7.5,"confidence":"high","weight":2},{"name":"Peter Kang","title":"Co-founder & Chairman, Barrel Holdings","linkedin":"https://www.linkedin.com/in/peterkang34/","background":"Columbia Univ. Investment banking background. Founded Barrel 2006. Ran it for 18 years. Now runs Barrel Holdings. Writes at peterkang.com.","strengths":"20-year founder track record. Investment banking background. Strategic thinker.","risks":"Stepped back from Barrel day-to-day in 2024. Less hands-on with client work.","score":8,"confidence":"high","weight":2},{"name":"Sei-Wook Kim","title":"Co-founder & Vice Chairman, Barrel Holdings","linkedin":"https://www.seiwook.com/","background":"Columbia Univ. Self-taught coder. Was COO & President of Barrel. Now oversees ops/finance/legal for portfolio.","strengths":"Technical co-founder. Ops & finance discipline. 20-year track record.","risks":"Stepped back from Barrel day-to-day. Focused on holding company level.","score":7.5,"confidence":"high","weight":2},{"name":"Wesley Turner-Harris","title":"CTO & Partner","linkedin":"https://www.linkedin.com/in/wes-turner/","background":"BFA, City College of NY. At Barrel since April 2011. 20+ years building websites. Also partner at Barrel Venture Partners.","strengths":"15 years tenure, deep technical experience, partner-level commitment","risks":"Limited public profile detail beyond Barrel","score":7,"confidence":"medium","weight":1},{"name":"Nadia Reynolds","title":"Business Development Manager","linkedin":"","background":"Confirmed on Barrel's about page. Sent initial response email with scoping questions.","strengths":"Professional initial response, asked proper scoping questions","risks":"No public LinkedIn found. Junior sales role.","score":5,"confidence":"medium","weight":1}],"leadership_avg":7,"leadership_weighted":7.4,"leadership_readout":"Strong founding team with 20-year track record (Kang & Kim), but they've stepped back to the holding company. Day-to-day run by Lucas Ballasy (CEO, design background) and Wes Turner (CTO). Solid bench for a boutique, but strategic firepower has moved up a level.","company_sub_scores":{"legitimacy":9,"capability":8,"specialization_fit":8.5,"quality_polish":7.5,"proof_of_execution":8,"leadership_strength":7.4,"sophisticated_client_handling":7,"communication_maturity":6.5,"risk_level":7.5,"overall_confidence":7.5},"company_score":7.7,"company_score_rationale":"Legitimate, specialized, capable. Communication maturity and review gaps are the main weaknesses. The Glassdoor score (3.2/5) is a mild concern for internal culture.","scores":{"sender":7.9,"leadership":7.4,"company":7.7,"aggregate":72},"tier":"Strong Specialist Boutique","confidence":"high","email_summary":{"subject":"Re: Greenhouse <> Barrel Intro","date_sent":"2026-04-02","offer_summary":"Response to Michael's outreach about a website redesign. Referral from Adam at Sircle. Barrel's Partner Manager David previously worked with Greenhouse's team at Shopify.","claims":["Partner Manager David worked with Greenhouse team at Shopify","Connected via Adam from Sircle"],"cc_contacts":[{"name":"Soliez Chua","email":"soliez.chua@barrelny.com","title":"Unknown"},{"name":"Nadia Reynolds","email":"nadia.reynolds@barrelny.com","title":"Business Development Manager"}],"email_client":"Superhuman Desktop"},"recommendation":{"caliber":"Strong Specialist Boutique","working_style":"Process-driven, design-forward, Shopify-native. Expect structured scoping, design-led builds, strong Shopify execution. You'll likely need to lead strategic vision.","strengths":["Deep Shopify Plus expertise (Premier Partner)","CPG/food-bev specialization aligns with Greenhouse","Real case studies with recognizable brands","20-year track record","CEO personally engaged","Existing Shopify connection (David)"],"weaknesses":["Founding strategic minds stepped back to Holdings","No third-party client reviews on Clutch","Glassdoor 3.2/5 suggests possible culture issues","Initial emails warm but not strategically sharp","Leadership transition (2024) — org maturing under new CEO"],"communication_style":"Warm but evaluative. Be direct about expectations. Ask for specific food/bev case studies. Probe for strategic thinking.","diligence_level":"Standard diligence. Review portfolio, ask for 1-2 references from similar brands. Ask who would actually work on your account.","take_the_meeting":true,"next_step":"Reply with scope overview, request relevant CPG case studies, schedule 30-min discovery call with Lucas and the proposed project team."},"fast_take":{"legitimacy":"Very real. 20-year track record, Shopify Premier Partner, recognizable clients (McCormick, L'Oreal, The Outset).","competence":"Strong in Shopify execution and CPG design. Strategic depth adequate but not exceptional — most strategic minds moved to Holdings.","polish":"Good but not elite. Clean website, case studies have depth. But emails were warm-not-insightful.","risk":"Low to moderate. Main risk: solid execution without enough strategic partnership. Glassdoor and zero Clutch reviews are mild yellow flags.","stance":"Take the meeting. Legitimate specialist boutique with strong CPG/Shopify fit. Evaluate strategic depth and meet the actual project team."},"agency_fit":{"is_agency":true,"ecommerce_fit":8.5,"strategic_depth":6.5,"execution_confidence":8,"taste_design_maturity":7.5,"best_fit_client":"Mid-market CPG brands ($10M-$500M) doing DTC on Shopify Plus","portfolio_assessment":"Largely custom work, not templated. Strong food/bev and beauty focus. Case studies show real business context.","operator_understanding":"DTC Patterns research project (300+ articles) shows genuine ecommerce operator understanding beyond design/dev."},"sources":{"sender":[{"label":"Lucas Ballasy — LinkedIn","url":"https://www.linkedin.com/in/lucasjballasy/"},{"label":"Lucas Ballasy — Personal Blog","url":"https://www.lucasballasy.com/"},{"label":"Lucas Ballasy — Barrel Bio","url":"https://www.barrelny.com/lucas-ballasy/"},{"label":"Lucas Ballasy — X/Twitter","url":"https://x.com/lucasjballasy"}],"company":[{"label":"Barrel — Main Website","url":"https://www.barrelny.com/"},{"label":"Barrel — About / Team","url":"https://www.barrelny.com/about"},{"label":"Barrel — Case Studies","url":"https://www.barrelny.com/work/mccormick"},{"label":"Barrel — Shopify Plus Page","url":"https://www.barrelny.com/shopify-plus-ecommerce-agency"},{"label":"Barrel — Newsletter","url":"https://www.barrelny.com/newsletter"},{"label":"Barrel Holdings","url":"https://www.barrel-holdings.com/"},{"label":"Barrel — LinkedIn","url":"https://www.linkedin.com/company/barrel"},{"label":"Barrel — Crunchbase","url":"https://www.crunchbase.com/organization/barrel"}],"leadership":[{"label":"Peter Kang — LinkedIn","url":"https://www.linkedin.com/in/peterkang34/"},{"label":"Peter Kang — Blog","url":"https://www.peterkang.com/"},{"label":"Sei-Wook Kim — Site","url":"https://www.seiwook.com/"},{"label":"Wes Turner — LinkedIn","url":"https://www.linkedin.com/in/wes-turner/"},{"label":"Wes Turner — Barrel Bio","url":"https://www.barrelny.com/wes-turner"},{"label":"Barrel Holdings — Leadership","url":"https://www.barrel-holdings.com/meet-our-leadership-team"},{"label":"Barrel — Org Chart (The Org)","url":"https://theorg.com/org/barrel"}],"reviews":[{"label":"Clutch (no reviews)","url":"https://clutch.co/profile/barrel"},{"label":"Glassdoor (3.2/5)","url":"https://www.glassdoor.com/Reviews/Barrel-Reviews-E644307.htm"},{"label":"Shopify Partners Directory","url":"https://www.shopify.com/partners/directory/partner/barrel"},{"label":"Agency Spotter","url":"https://www.agencyspotter.com/barrelny"},{"label":"ZoomInfo","url":"https://www.zoominfo.com/c/barrel-llc/347359135"}]},"discovery_questions":{"key_risks":["Strategic depth may have left the building — founders stepped back to Holdings in 2024, CEO is a designer-turned-operator","Unknown who actually does the work — CEO and BDM are the only faces so far, no project team named","Zero third-party validation — 20 years, Shopify Premier Partner, but not a single Clutch review and Glassdoor 3.2/5","Communication was warm but not sharp — neither email demonstrated thinking about Greenhouse's specific business","Leadership transition is still fresh — org maturing under new CEO, culture and quality may be shifting"],"questions":[{"category":"Strategic Depth","priority":"high","timing":"early","objective":"Test whether they can think about your business beyond 'redesign the Shopify store.'","question":"When you look at Greenhouse today — the brand, the site, the DTC experience — what's the one thing you'd change first, and why?","strong_answer":["They've actually looked at the site before the call","Name something specific and explain the business logic","Connect the recommendation to revenue, conversion, or brand positioning"],"weak_answer":["'We'd need to do a full audit first'","Generic comments about 'modernizing the design'","They haven't looked at the site at all"]},{"category":"Strategic Depth","priority":"high","timing":"middle","objective":"Determine whether strategic thinking still lives inside Barrel or left with the founders.","question":"I know Peter and Sei-Wook moved up to Barrel Holdings. How does that change how strategy gets done for clients today? Who's the person challenging our assumptions and pushing back on scope?","strong_answer":["Honest about the transition — doesn't pretend nothing changed","Names a specific person who owns strategic direction on accounts","Describes a real process for strategic input","Acknowledges the client will likely lead vision, explains how they complement that"],"weak_answer":["'Nothing's changed, we still have the same approach'","Vague references to 'the team' without naming anyone","Deflects or seems uncomfortable with the question","Claims Lucas does strategy for all clients (he's CEO — he can't)"]},{"category":"Team","priority":"high","timing":"early","objective":"Identify exactly who would be on your account and how senior they are.","question":"If we move forward, I want to know the actual humans. Who's the project lead, who's the lead designer, who's the lead developer — and what percentage of their time is on my account?","strong_answer":["Names specific people by name and role","Gives realistic time allocation","Offers to introduce them before signing","Acknowledges senior people are at key milestones, not daily"],"weak_answer":["'We'll assign the right team based on scope'","Can't name anyone specific","Claims senior people are full-time (implausible at this size)","Gets defensive about the question"]},{"category":"Proof of Competence","priority":"high","timing":"early","objective":"Validate that their CPG/food-bev work is real and comparable, not just logo decoration.","question":"Walk me through the Sweet Loren's or Bobo's project. What was the business problem, what did you actually build, and what happened to conversion or revenue after launch?","strong_answer":["Tells the story from the client's business problem, not 'we redesigned the site'","Mentions specific metrics: conversion rate, AOV, page speed, subscription uptake","Describes tradeoffs they made and why","Acknowledges what didn't work perfectly"],"weak_answer":["'We migrated them to Shopify and redesigned the site'","No metrics, no business outcome","Can only describe what it looks like, not what it achieved","Refers you to the case study page instead of answering"]},{"category":"Communication","priority":"medium","timing":"middle","objective":"Understand how they handle a client who has strong opinions and leads from the front.","question":"I'm hands-on. I have strong opinions about brand, UX, and conversion. I'll be in the details. How do you work with a client like that — and where do you push back?","strong_answer":["Welcomes it — doesn't treat it as a problem","Gives a real example of pushing back and how they framed it","Describes a clear decision-making framework","Acknowledges tension is productive"],"weak_answer":["'We're very collaborative' (means nothing)","Seems nervous about a hands-on client","'We usually lead the creative process' (will clash)","Can't give a single example of pushing back"]},{"category":"Execution","priority":"medium","timing":"middle","objective":"Pressure-test whether their process is real or performative.","question":"On a project this size, what does week 3 actually look like? Not the proposal timeline — the reality. What are we reviewing, who's in the room, and what decisions are we making?","strong_answer":["Describes a specific week with specifics (e.g., wireframe review for PDP and collections)","Shows they've done this enough to know the rhythm","Mentions where things typically get stuck and how they prevent it"],"weak_answer":["Recites a generic 'discovery > design > development > QA' timeline","Can't get specific about any given week","'Every project is different' without pattern recognition"]},{"category":"Failure","priority":"medium","timing":"late","objective":"See how they handle transparency about things going wrong.","question":"Tell me about a project in the last two years that didn't go well. What happened, and what did you change because of it?","strong_answer":["Actually names a project or real scenario","Describes what went wrong with honesty","Explains what they changed systemically","Doesn't blame the client entirely"],"weak_answer":["'We haven't really had a project go wrong'","Blames the client completely","Gives a fake-humble answer","Can't name anything specific"]},{"category":"Risk","priority":"low","timing":"late","objective":"Probe the Glassdoor score and zero-review pattern without being aggressive.","question":"I noticed you've been around 20 years but don't have Clutch reviews. And Glassdoor is mixed. That's not a dealbreaker — but I'm curious how you think about reputation and client satisfaction measurement. Do you track NPS or anything similar?","strong_answer":["Addresses it directly, not defensively","Explains why (e.g., 'we rely on referrals, never prioritized Clutch')","Describes how they measure client satisfaction internally","Acknowledges the Glassdoor score and what they're doing about it"],"weak_answer":["Gets defensive or dismissive","'Those platforms don't matter'","No internal measurement of client satisfaction","Ignores the Glassdoor mention entirely"]}],"usage_guide":{"ask_first":[{"index":3,"reason":"Case study walkthrough immediately tells you if they're real operators or portfolio decorators"},{"index":2,"reason":"Non-negotiable. If they can't name people, walk."}],"ask_middle":[{"index":1,"reason":"Reveals organizational maturity after founder transition"},{"index":4,"reason":"Reveals cultural fit with a hands-on client"},{"index":5,"reason":"Separates experienced shops from ones running on vibes"}],"ask_late":[{"index":6,"reason":"Trust signal — honesty about failure"},{"index":7,"reason":"Only if conversation is going well enough for diligence"}],"lean_in_signals":["They name specific people, metrics, and tradeoffs","They push back on something you say (shows confidence)","They acknowledge the leadership transition honestly","They've looked at your site before the call"],"walk_away_signals":["Can't name who works on your account","No metrics on any case study","Generic answers to every question","Gets defensive about founders stepping back or Glassdoor","Treats this like a sales call instead of a partnership evaluation"]}}}];
+
+// Helpers
+const esc=(s)=>{if(!s)return'';const d=document.createElement('div');d.textContent=String(s);return d.innerHTML};
+const sc=(v)=>v>=7?'g':v>=4?'y':'r';
+const tc=(tier)=>{const t=tier.toLowerCase();return t.includes('premium')?'premium':t.includes('strong')?'strong':t.includes('capable')?'capable':t.includes('commodity')?'commodity':t.includes('weak')?'weak':'low'};
+const bar=(label,val)=>{const c=sc(val);return`<div class="sb"><div class="sb-label">${esc(label)}</div><div class="sb-track"><div class="sb-fill ${c}" style="width:${val*10}%"></div></div><div class="sb-val ${c}">${val.toFixed(1)}</div></div>`};
+const chevronSvg='<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 4l4 4-4 4"/></svg>';
+
+// Accordion helper
+function accordion(id,title,preview,content,opts={}){
+  const open=opts.open?'open':'';
+  const focus=opts.focus?'focus-visible':'';
+  return`<div class="accordion ${open} ${focus}" data-acc="${id}">
+    <div class="acc-header" onclick="toggleAcc(this)">
+      <div class="acc-title">${title}</div>
+      <div class="acc-preview">${esc(preview)}</div>
+      <div class="acc-chevron">${chevronSvg}</div>
+    </div>
+    <div class="acc-body"><div class="acc-inner">${content}</div></div>
+  </div>`;
+}
+
+function toggleAcc(el){
+  const acc=el.closest('.accordion');
+  acc.classList.toggle('open');
+  saveAccState();
+}
+
+function saveAccState(){
+  const state={};
+  document.querySelectorAll('.accordion').forEach(a=>{state[a.dataset.acc]=a.classList.contains('open')});
+  try{localStorage.setItem('vc-acc-'+selected,JSON.stringify(state))}catch(e){}
+}
+function restoreAccState(){
+  try{
+    const state=JSON.parse(localStorage.getItem('vc-acc-'+selected));
+    if(!state)return;
+    document.querySelectorAll('.accordion').forEach(a=>{
+      if(state[a.dataset.acc]!==undefined){a.classList.toggle('open',state[a.dataset.acc])}
+    });
+  }catch(e){}
+}
+
+// Sidebar
+let selected=ASSESSMENTS.length?ASSESSMENTS[0].id:null;
+let focusMode=false;
+
+function renderSidebar(filter=''){
+  const sb=document.getElementById('sidebar');
+  const list=ASSESSMENTS.filter(a=>!filter||a.company.name.toLowerCase().includes(filter.toLowerCase()));
+  document.getElementById('count').textContent=ASSESSMENTS.length+' vendor'+(ASSESSMENTS.length!==1?'s':'');
+  if(!list.length){sb.innerHTML='<div class="empty-state">No vendors found.</div>';return}
+  sb.innerHTML=list.map(a=>{
+    const c=sc(a.scores.aggregate/10);
+    return`<div class="sidebar-item${a.id===selected?' active':''}" data-id="${a.id}">
+      <div class="si-name">${esc(a.company.name)}</div>
+      <div class="si-row">
+        <span class="si-score" style="color:var(--${c==='g'?'green':c==='y'?'yellow':'red'})">${a.scores.aggregate}</span>
+        <span class="si-tier">${esc(a.tier)}</span>
+      </div>
+      <div class="si-date">${a.date} &middot; ${esc(a.sender.name)}</div>
+    </div>`}).join('');
+  sb.querySelectorAll('.sidebar-item').forEach(el=>{
+    el.addEventListener('click',()=>{selected=el.dataset.id;renderSidebar(document.getElementById('search').value);renderDetail()})
+  });
+}
+
+// Detail
+function renderDetail(){
+  const m=document.getElementById('main');
+  const a=ASSESSMENTS.find(x=>x.id===selected);
+  if(!a){m.innerHTML='<div class="empty-state">Select a vendor.</div>';return}
+  const t=tc(a.tier),s=a.sender,co=a.company,es=a.email_summary,rec=a.recommendation,ft=a.fast_take,af=a.agency_fit,dq=a.discovery_questions;
+  const sc0=a.scores,cs=a.company_sub_scores,ss=s.sub_scores;
+
+  // Header
+  let h=`<div class="detail-header"><div class="dh-top">
+    <div>
+      <div class="dh-company">${esc(co.name)}</div>
+      <div class="dh-meta">${a.date} &middot; <a href="mailto:${esc(s.email)}">${esc(s.name)}</a> &middot; <a href="${esc(co.website)}" target="_blank">${esc(co.domain)}</a></div>
+    </div>
+    <div class="dh-score">
+      <div class="big" style="color:var(--${sc0.aggregate>=70?'green':sc0.aggregate>=50?'yellow':'red'})">${sc0.aggregate}<span class="of">/100</span></div>
+      <div class="dh-tier t-${t}">${esc(a.tier)}</div>
+    </div>
+  </div></div>`;
+
+  // Content
+  let c='<div class="content">';
+
+  // Executive Summary (always visible, not in accordion)
+  const meetCls=rec.take_the_meeting===true?'ed-go':rec.take_the_meeting===false?'ed-no':'ed-maybe';
+  const meetTxt=rec.take_the_meeting===true?'Take the meeting':rec.take_the_meeting===false?'Do not engage':'Proceed with caution';
+  c+=`<div class="exec">
+    <div class="exec-headline">${esc(a.tier)} &mdash; ${sc0.aggregate}/100 &mdash; <span class="conf conf-${a.confidence}">${a.confidence} confidence</span></div>
+    <ul>
+      <li><strong>Legitimacy:</strong> ${esc(ft.legitimacy)}</li>
+      <li><strong>Competence:</strong> ${esc(ft.competence)}</li>
+      <li><strong>Polish:</strong> ${esc(ft.polish)}</li>
+      <li><strong>Risk:</strong> ${esc(ft.risk)}</li>
+      <li><strong>Stance:</strong> ${esc(ft.stance)}</li>
+    </ul>
+    <div class="exec-decision ${meetCls}"><span class="dot"></span>${meetTxt}</div>
+  </div>`;
+
+  // S1: Email Summary
+  const emailPreview=`${esc(s.name)} (${esc(s.title)}) — ${esc(es.subject)}`;
+  let s1=`<dl class="dg">
+    <dt>Sender</dt><dd>${esc(s.name)} &mdash; ${esc(s.title)}</dd>
+    <dt>Email</dt><dd><a href="mailto:${esc(s.email)}">${esc(s.email)}</a></dd>
+    <dt>Subject</dt><dd>${esc(es.subject)}</dd>
+    <dt>Date</dt><dd>${esc(es.date_sent)}</dd>
+    <dt>Email Client</dt><dd>${esc(es.email_client||'Unknown')}</dd>
+    <dt>CC'd</dt><dd>${es.cc_contacts?es.cc_contacts.map(x=>esc(x.name)+' ('+esc(x.title)+')').join(', '):'None'}</dd>
+    <dt>Summary</dt><dd>${esc(es.offer_summary)}</dd>
+    <dt>Claims</dt><dd>${es.claims?es.claims.map(x=>'&bull; '+esc(x)).join('<br>'):'None'}</dd>
+  </dl>`;
+  c+=accordion('email','Email Summary',emailPreview,s1);
+
+  // S2: Sender
+  const senderPreview=`Score ${s.score}/10 — ${esc(s.title)}, ${ss.communication<7?'moderate':'strong'} communication`;
+  let s2=`<dl class="dg">
+    <dt>LinkedIn</dt><dd>${s.linkedin?`<a href="${esc(s.linkedin)}" target="_blank">${esc(s.linkedin)}</a> <span class="conf conf-${s.linkedin_confidence}">${s.linkedin_confidence}</span>`:'Not found'}</dd>
+    <dt>Background</dt><dd>${esc(s.background)}</dd>
+    <dt>Signals</dt><dd>${s.credibility_signals?s.credibility_signals.map(x=>'&bull; '+esc(x)).join('<br>'):'—'}</dd>
+    <dt>Concerns</dt><dd>${s.concerns&&s.concerns.length?s.concerns.map(x=>'&bull; '+esc(x)).join('<br>'):'None'}</dd>
+  </dl><hr class="divider">
+  ${bar('Seniority',ss.seniority)}${bar('Experience',ss.experience)}${bar('Credibility',ss.credibility)}${bar('Communication',ss.communication)}${bar('Trust',ss.trustworthiness)}
+  <hr class="divider"><div class="sb"><div class="sb-label" style="color:var(--white);font-weight:500">Sender Score</div><div class="sb-track"><div class="sb-fill ${sc(s.score)}" style="width:${s.score*10}%"></div></div><div class="sb-val ${sc(s.score)}" style="font-size:14px">${s.score.toFixed(1)}</div></div>
+  <p class="note">${esc(s.score_rationale)}</p>`;
+  c+=accordion('sender','Sender Research',senderPreview,s2);
+
+  // S3: Leadership
+  const leaderPreview=`Weighted ${a.leadership_weighted}/10 — ${a.leadership.filter(l=>l.weight>=2).length} senior leaders found`;
+  let s3=`<table class="lt"><thead><tr><th>Name</th><th>Title</th><th>LinkedIn</th><th>Strengths</th><th>Risks</th><th>Score</th></tr></thead><tbody>`;
+  a.leadership.forEach(l=>{
+    s3+=`<tr><td class="name">${esc(l.name)}</td><td>${esc(l.title)}</td><td>${l.linkedin?`<a href="${esc(l.linkedin)}" target="_blank">Link</a>`:'—'}</td><td>${esc(l.strengths)}</td><td>${esc(l.risks)}</td><td style="color:var(--${sc(l.score)==='g'?'green':sc(l.score)==='y'?'yellow':'red'})">${l.score.toFixed(1)}</td></tr>`});
+  s3+=`</tbody></table><hr class="divider">
+  ${bar('Average',a.leadership_avg)}${bar('Weighted (founders 2x)',a.leadership_weighted)}
+  <p class="note">${esc(a.leadership_readout)}</p>`;
+  c+=accordion('leadership','Leadership',leaderPreview,s3);
+
+  // S4: Company
+  const companyPreview=`Score ${a.company_score}/10 — ${esc(co.positioning).substring(0,60)}`;
+  let s4=`<dl class="dg">
+    <dt>Description</dt><dd>${esc(co.description)}</dd>
+    <dt>Services</dt><dd>${co.services.map(x=>`<span class="tag">${esc(x)}</span>`).join(' ')}</dd>
+    <dt>Location</dt><dd>${esc(co.geography)}</dd>
+    <dt>Size</dt><dd>${esc(co.size)}</dd>
+    <dt>Founded</dt><dd>${esc(co.founded)} (${co.years_in_operation} years)</dd>
+    <dt>Shopify</dt><dd style="color:var(--green)">${esc(co.shopify_status)}</dd>
+    <dt>Clients</dt><dd>${co.named_clients.slice(0,8).map(x=>esc(x)).join(', ')}${co.named_clients.length>8?' +more':''}</dd>
+    <dt>Reviews</dt><dd>${esc(co.reviews_summary)}</dd>
+    <dt>Red Flags</dt><dd style="color:var(--red)">${co.red_flags.map(x=>'&bull; '+esc(x)).join('<br>')}</dd>
+  </dl><hr class="divider">
+  ${bar('Legitimacy',cs.legitimacy)}${bar('Capability',cs.capability)}${bar('Specialization',cs.specialization_fit)}${bar('Quality / Polish',cs.quality_polish)}${bar('Proof of Execution',cs.proof_of_execution)}${bar('Leadership',cs.leadership_strength)}${bar('Client Handling',cs.sophisticated_client_handling)}${bar('Communication',cs.communication_maturity)}${bar('Risk (10=safe)',cs.risk_level)}${bar('Confidence',cs.overall_confidence)}
+  <hr class="divider"><div class="sb"><div class="sb-label" style="color:var(--white);font-weight:500">Company Score</div><div class="sb-track"><div class="sb-fill ${sc(a.company_score)}" style="width:${a.company_score*10}%"></div></div><div class="sb-val ${sc(a.company_score)}" style="font-size:14px">${a.company_score.toFixed(1)}</div></div>
+  <p class="note">${esc(a.company_score_rationale)}</p>`;
+  c+=accordion('company','Company Research',companyPreview,s4);
+
+  // S5: Overall Scoring
+  const overallPreview=`Sender ${sc0.sender} + Leadership ${sc0.leadership} + Company ${sc0.company} = ${sc0.aggregate}`;
+  let s5=`${bar('Sender (25%)',sc0.sender)}${bar('Leadership (35%)',sc0.leadership)}${bar('Company (40%)',sc0.company)}
+  <hr class="divider"><div class="sb"><div class="sb-label" style="color:var(--white);font-weight:600;font-size:14px">Aggregate</div><div class="sb-track" style="height:6px"><div class="sb-fill ${sc(sc0.aggregate/10)}" style="width:${sc0.aggregate}%"></div></div><div class="sb-val ${sc(sc0.aggregate/10)}" style="font-size:16px">${sc0.aggregate}</div></div>`;
+  c+=accordion('scoring','Overall Scoring',overallPreview,s5);
+
+  // S6: Recommendations
+  const recPreview=`${esc(rec.caliber)} — ${rec.take_the_meeting?'take the meeting':'do not engage'}`;
+  let s6='';
+  const recs=[
+    ['Caliber',rec.caliber],['Working Style',rec.working_style],
+    ['Communication',rec.communication_style],['Diligence',rec.diligence_level],
+    ['Next Step',rec.next_step]
+  ];
+  recs.forEach(([label,val])=>{s6+=`<div class="rec"><div class="rec-label">${label}</div><div class="rec-val">${esc(val)}</div></div>`});
+  s6+=`<div class="rec"><div class="rec-label">Strengths</div><div class="rec-detail">${rec.strengths.map(x=>'&bull; '+esc(x)).join('<br>')}</div></div>`;
+  s6+=`<div class="rec"><div class="rec-label">Weaknesses</div><div class="rec-detail" style="color:var(--red)">${rec.weaknesses.map(x=>'&bull; '+esc(x)).join('<br>')}</div></div>`;
+  c+=accordion('recs','Recommendations',recPreview,s6,{focus:true});
+
+  // S7: Source Links
+  const src=a.sources;
+  const srcCount=(src.sender||[]).length+(src.company||[]).length+(src.leadership||[]).length+(src.reviews||[]).length;
+  let s7=`<div class="src-grid"><div>`;
+  if(src.sender&&src.sender.length){s7+=`<div class="src-group"><h4>Sender</h4><ul>${src.sender.map(l=>`<li><a href="${esc(l.url)}" target="_blank">${esc(l.label)}</a></li>`).join('')}</ul></div>`}
+  if(src.company&&src.company.length){s7+=`<div class="src-group"><h4>Company</h4><ul>${src.company.map(l=>`<li><a href="${esc(l.url)}" target="_blank">${esc(l.label)}</a></li>`).join('')}</ul></div>`}
+  s7+=`</div><div>`;
+  if(src.leadership&&src.leadership.length){s7+=`<div class="src-group"><h4>Leadership</h4><ul>${src.leadership.map(l=>`<li><a href="${esc(l.url)}" target="_blank">${esc(l.label)}</a></li>`).join('')}</ul></div>`}
+  if(src.reviews&&src.reviews.length){s7+=`<div class="src-group"><h4>Reviews</h4><ul>${src.reviews.map(l=>`<li><a href="${esc(l.url)}" target="_blank">${esc(l.label)}</a></li>`).join('')}</ul></div>`}
+  s7+=`</div></div>`;
+  c+=accordion('sources','Source Links',`${srcCount} links across sender, company, leadership, reviews`,s7);
+
+  // S8: Agency Fit
+  if(af&&af.is_agency){
+    const afPreview=`Ecom ${af.ecommerce_fit}/10, Strategy ${af.strategic_depth}/10, Execution ${af.execution_confidence}/10`;
+    let s8=`${bar('Ecommerce Fit',af.ecommerce_fit)}${bar('Strategic Depth',af.strategic_depth)}${bar('Execution Confidence',af.execution_confidence)}${bar('Taste / Design',af.taste_design_maturity)}
+    <hr class="divider"><dl class="dg">
+      <dt>Best Fit Client</dt><dd>${esc(af.best_fit_client)}</dd>
+      <dt>Portfolio</dt><dd>${esc(af.portfolio_assessment)}</dd>
+      <dt>Operator IQ</dt><dd>${esc(af.operator_understanding)}</dd>
+    </dl>`;
+    c+=accordion('agency','Agency Fit',afPreview,s8);
+  }
+
+  // S9: Discovery Questions
+  if(dq&&dq.questions&&dq.questions.length){
+    const dqPreview=`${dq.questions.length} questions across ${[...new Set(dq.questions.map(q=>q.category))].join(', ')}`;
+    let s9='';
+
+    // Key risks
+    if(dq.key_risks&&dq.key_risks.length){
+      s9+=`<div style="margin-bottom:16px"><div style="font-size:12px;color:var(--text3);margin-bottom:8px">Key risks to probe</div>`;
+      dq.key_risks.forEach(r=>{s9+=`<div style="font-size:12px;color:var(--red);padding:3px 0">&bull; ${esc(r)}</div>`});
+      s9+=`</div><hr class="divider">`;
+    }
+
+    // Questions — show first 3, rest behind show-more
+    dq.questions.forEach((q,i)=>{
+      const pcls=q.priority==='high'?'hi':q.priority==='medium'?'med':'lo';
+      const hidden=i>=3?' style="display:none" data-extra="1"':'';
+      s9+=`<div class="dq" data-dqi="${i}"${hidden}>
+        <div class="dq-top">
+          <span class="dq-cat">${esc(q.category)}</span>
+          <span class="dq-prio ${pcls}">${esc(q.priority)}</span>
+        </div>
+        <div class="dq-q" onclick="this.closest('.dq').classList.toggle('expanded')">&ldquo;${esc(q.question)}&rdquo;</div>
+        <div class="dq-detail">
+          <div class="dq-obj">${esc(q.objective)}</div>
+          <div class="dq-cols">
+            <div class="dq-col strong"><h5>Strong Answer</h5><ul>${q.strong_answer.map(x=>`<li>&bull; ${esc(x)}</li>`).join('')}</ul></div>
+            <div class="dq-col weak"><h5>Weak Answer</h5><ul>${q.weak_answer.map(x=>`<li>&bull; ${esc(x)}</li>`).join('')}</ul></div>
+          </div>
+        </div>
+      </div>`;
+    });
+
+    if(dq.questions.length>3){
+      s9+=`<div class="show-more" onclick="document.querySelectorAll('[data-extra]').forEach(e=>e.style.display='');this.style.display='none'">Show ${dq.questions.length-3} more questions</div>`;
+    }
+
+    // Usage guide
+    const ug=dq.usage_guide;
+    if(ug){
+      s9+=`<div class="guide"><h4>How to use these</h4>
+      <div class="guide-cols">
+        <div class="guide-col lean"><h5>Lean in if...</h5><ul>${ug.lean_in_signals.map(x=>`<li>&bull; ${esc(x)}</li>`).join('')}</ul></div>
+        <div class="guide-col walk"><h5>Walk away if...</h5><ul>${ug.walk_away_signals.map(x=>`<li>&bull; ${esc(x)}</li>`).join('')}</ul></div>
+      </div></div>`;
+    }
+
+    c+=accordion('questions','Discovery Questions',dqPreview,s9,{focus:true});
+  }
+
+  c+=`<div class="timestamp">Generated ${a.date}</div></div>`;
+  m.innerHTML=h+c;
+  m.scrollTop=0;
+  restoreAccState();
+  applyFocusMode();
+}
+
+// Focus mode
+function applyFocusMode(){
+  const main=document.getElementById('main');
+  if(focusMode){main.classList.add('focus-active')}
+  else{main.classList.remove('focus-active')}
+}
+
+// Init
+renderSidebar();
+renderDetail();
+document.getElementById('search').addEventListener('input',e=>renderSidebar(e.target.value));
+document.getElementById('focusToggle').addEventListener('change',e=>{
+  focusMode=e.target.checked;
+  applyFocusMode();
+});
+</script>
+</body>
+</html>
