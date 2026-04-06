@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vendor Assessment: Barrel</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+      background: #0f0f0f; color: #e0e0e0; line-height: 1.6; padding: 0;
+    }
+    .header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      padding: 40px 32px; border-bottom: 1px solid #2a2a3e;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;
+    }
+    .header-left h1 { font-size: 28px; font-weight: 700; color: #fff; }
+    .header-left .subtitle { color: #888; font-size: 14px; margin-top: 4px; }
+    .header-left .subtitle a { color: #6e8efb; text-decoration: none; }
+    .score-circle {
+      width: 100px; height: 100px; border-radius: 50%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 32px; color: #fff; border: 3px solid;
+    }
+    .score-circle .label { font-size: 10px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
+    .score-circle.tier-strong { background: rgba(59,130,246,0.15); border-color: #3b82f6; }
+    .tier-badge {
+      display: inline-block; padding: 4px 14px; border-radius: 20px;
+      font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px;
+    }
+    .tier-badge.strong { background: #3b82f622; color: #3b82f6; border: 1px solid #3b82f644; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+    .card {
+      background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px;
+      padding: 28px; margin-bottom: 24px;
+    }
+    .card h2 {
+      font-size: 18px; font-weight: 600; color: #fff;
+      margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #2a2a2a;
+    }
+    .card h2 .sn { color: #6e8efb; font-size: 14px; margin-right: 8px; }
+    .score-row { display: flex; align-items: center; margin-bottom: 12px; gap: 12px; }
+    .score-label { width: 220px; font-size: 13px; color: #aaa; flex-shrink: 0; }
+    .score-bar-track { flex: 1; height: 8px; background: #2a2a2a; border-radius: 4px; overflow: hidden; }
+    .score-bar-fill { height: 100%; border-radius: 4px; }
+    .score-bar-fill.red { background: linear-gradient(90deg, #dc2626, #ef4444); }
+    .score-bar-fill.yellow { background: linear-gradient(90deg, #ca8a04, #eab308); }
+    .score-bar-fill.green { background: linear-gradient(90deg, #16a34a, #22c55e); }
+    .score-value { width: 40px; text-align: right; font-weight: 600; font-size: 14px; }
+    .score-value.red { color: #ef4444; }
+    .score-value.yellow { color: #eab308; }
+    .score-value.green { color: #22c55e; }
+    .data-grid { display: grid; grid-template-columns: 180px 1fr; gap: 10px 16px; }
+    .data-grid dt { color: #666; font-size: 13px; font-weight: 500; }
+    .data-grid dd { color: #ccc; font-size: 14px; }
+    .data-grid dd a { color: #6e8efb; text-decoration: none; }
+    .data-grid dd a:hover { text-decoration: underline; }
+    .leader-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .leader-table th { text-align: left; padding: 10px 12px; color: #888; border-bottom: 1px solid #2a2a2a; font-weight: 500; }
+    .leader-table td { padding: 10px 12px; border-bottom: 1px solid #1f1f1f; color: #ccc; vertical-align: top; }
+    .leader-table td a { color: #6e8efb; text-decoration: none; }
+    .leader-table tr:hover td { background: #1f1f1f; }
+    .fast-take {
+      background: linear-gradient(135deg, #1a1a2e, #1e293b);
+      border: 1px solid #334155; border-radius: 12px; padding: 24px 28px;
+    }
+    .fast-take ul { list-style: none; padding: 0; }
+    .fast-take li { padding: 10px 0; font-size: 15px; color: #e0e0e0; border-bottom: 1px solid #2a2a3e; }
+    .fast-take li:last-child { border-bottom: none; }
+    .fast-take li strong { color: #fff; }
+    .rec-card {
+      background: #111827; border-left: 4px solid #6e8efb;
+      border-radius: 0 8px 8px 0; padding: 20px 24px; margin-bottom: 12px;
+    }
+    .rec-card .rec-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #6e8efb; margin-bottom: 4px; }
+    .rec-card .rec-value { font-size: 16px; color: #fff; font-weight: 500; }
+    .rec-card .rec-detail { font-size: 13px; color: #999; margin-top: 4px; }
+    .source-group { margin-bottom: 20px; }
+    .source-group h4 { font-size: 13px; color: #888; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .source-group ul { list-style: none; padding: 0; }
+    .source-group li { padding: 4px 0; }
+    .source-group li a { color: #6e8efb; font-size: 13px; text-decoration: none; word-break: break-all; }
+    .source-group li a:hover { text-decoration: underline; }
+    .confidence { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+    .confidence.high { background: #22c55e22; color: #22c55e; }
+    .confidence.medium { background: #eab30822; color: #eab308; }
+    .tag { display: inline-block; padding: 2px 8px; background: #2a2a2a; border-radius: 4px; font-size: 12px; color: #aaa; margin: 2px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+    .summary-scores { display: flex; gap: 32px; align-items: center; flex-wrap: wrap; margin-top: 16px; }
+    .summary-score-item { text-align: center; }
+    .summary-score-item .big-num { font-size: 36px; font-weight: 700; }
+    .summary-score-item .big-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+    .divider { border: none; border-top: 1px solid #2a2a2a; margin: 20px 0; }
+    .timestamp { text-align: center; color: #444; font-size: 12px; padding: 24px; }
+    .note { font-size: 13px; color: #888; font-style: italic; margin-top: 8px; }
+    @media print {
+      body { background: #fff; color: #000; }
+      .card { border: 1px solid #ddd; background: #fff; }
+      .header { background: #f5f5f5; }
+      .score-bar-track { background: #eee; }
+      a { color: #0066cc; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Barrel</h1>
+    <div class="subtitle">
+      Vendor Credibility Assessment &mdash; April 6, 2026
+      &nbsp;|&nbsp; Sender: <a href="mailto:lucas.ballasy@barrelny.com">Lucas Ballasy</a>
+      &nbsp;|&nbsp; <a href="https://www.barrelny.com" target="_blank">barrelny.com</a>
+    </div>
+    <div class="tier-badge strong">Strong Specialist Boutique</div>
+  </div>
+  <div class="score-circle tier-strong">
+    72
+    <span class="label">/ 100</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SECTION 1 -->
+  <div class="card">
+    <h2><span class="sn">01</span> Parsed Email Summary</h2>
+    <dl class="data-grid">
+      <dt>Sender</dt>
+      <dd>Lucas Ballasy</dd>
+      <dt>Title</dt>
+      <dd>CEO, Partner</dd>
+      <dt>Email</dt>
+      <dd><a href="mailto:lucas.ballasy@barrelny.com">lucas.ballasy@barrelny.com</a></dd>
+      <dt>Company</dt>
+      <dd>Barrel</dd>
+      <dt>Website</dt>
+      <dd><a href="https://www.barrelny.com" target="_blank">www.barrelny.com</a></dd>
+      <dt>Subject</dt>
+      <dd>Re: Greenhouse &lt;&gt; Barrel Intro</dd>
+      <dt>Date Sent</dt>
+      <dd>Thu, April 2, 2026 at 10:45 AM EDT</dd>
+      <dt>CC'd Contacts</dt>
+      <dd>Soliez Chua (soliez.chua@barrelny.com) &mdash; title unknown<br>
+          Nadia Reynolds (nadia.reynolds@barrelny.com) &mdash; Business Development Manager</dd>
+      <dt>Email Client</dt>
+      <dd>Superhuman Desktop <span class="tag">high-signal tool</span></dd>
+      <dt>Context</dt>
+      <dd>Reply to an intro email. Referral from Adam at Sircle. Barrel's Partner Manager David previously worked with Greenhouse's team at Shopify.</dd>
+      <dt>Offer Summary</dt>
+      <dd>Barrel is responding to Michael's outreach about a website redesign. Nadia Reynolds (BDM) sent the initial response asking about timeline, scope, and budget. Lucas Ballasy (CEO) followed up personally, noting the Sircle referral and the Shopify connection.</dd>
+      <dt>Claims Made</dt>
+      <dd>
+        &bull; Partner Manager David worked with Greenhouse's team when he was at Shopify<br>
+        &bull; Connected via Adam from Sircle (Shopify partner ecosystem)
+      </dd>
+      <dt>Links Found</dt>
+      <dd>
+        <a href="https://www.barrelny.com" target="_blank">barrelny.com</a>,
+        <a href="https://www.lucasballasy.com/" target="_blank">lucasballasy.com (personal blog)</a>,
+        <a href="https://www.barrelny.com/newsletter" target="_blank">Barrel Newsletter</a>
+      </dd>
+      <dt>Extraction Confidence</dt>
+      <dd><span class="confidence high">High</span></dd>
+    </dl>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="card">
+    <h2><span class="sn">02</span> Sender Research: Lucas Ballasy</h2>
+    <dl class="data-grid">
+      <dt>LinkedIn</dt>
+      <dd><a href="https://www.linkedin.com/in/lucasjballasy/" target="_blank">linkedin.com/in/lucasjballasy/</a> <span class="confidence high">High</span></dd>
+      <dt>Current Role</dt>
+      <dd>CEO &amp; Partner at Barrel (confirmed on LinkedIn, company website, and email signature)</dd>
+      <dt>Background</dt>
+      <dd>Tyler School of Art (Temple University). Joined Barrel as freelance designer in 2013. Rose to Partner &amp; CEO. Co-founded Barrel Venture Partners (2019) for early-stage investing. Helped launch Barrel Holdings (2021).</dd>
+      <dt>Personal Blog</dt>
+      <dd><a href="https://www.lucasballasy.com/" target="_blank">lucasballasy.com</a> &mdash; writes about leadership, ecommerce, personal growth</dd>
+      <dt>Location</dt>
+      <dd>Bucks County, PA (moved from NYC 2021)</dd>
+      <dt>Evidence of Work</dt>
+      <dd>At Barrel since 2013 (~13 years). Promoted from freelance designer to CEO. Active content creator. Personal interests include powerlifting, HYROX, and music.</dd>
+      <dt>Credibility Signals</dt>
+      <dd>
+        &bull; CEO personally replying to intro email (not delegating entirely to BDM)<br>
+        &bull; Uses Superhuman (signal of operational sophistication)<br>
+        &bull; Has a personal blog with regular content<br>
+        &bull; 13 years at the company &mdash; deep institutional knowledge<br>
+        &bull; Co-founded venture arm &mdash; strategic thinking beyond execution
+      </dd>
+      <dt>Concerns</dt>
+      <dd>
+        &bull; Rose internally from designer &mdash; may be stronger on design/brand than strategy/tech<br>
+        &bull; Not the original founder (Peter Kang &amp; Sei-Wook Kim founded in 2006, stepped back 2024)
+      </dd>
+    </dl>
+
+    <hr class="divider">
+    <h3 style="color:#fff; font-size:15px; margin-bottom:16px;">Sender Sub-Scores</h3>
+    <div class="score-row">
+      <div class="score-label">Seniority / Decision Authority</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:90%"></div></div>
+      <div class="score-value green">9.0</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label">Relevant Experience</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:80%"></div></div>
+      <div class="score-value green">8.0</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label">Credibility Signals</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:80%"></div></div>
+      <div class="score-value green">8.0</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label">Communication Quality</div>
+      <div class="score-bar-track"><div class="score-bar-fill yellow" style="width:65%"></div></div>
+      <div class="score-value yellow">6.5</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label">Trustworthiness</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:80%"></div></div>
+      <div class="score-value green">8.0</div>
+    </div>
+    <div class="score-row" style="margin-top:8px; padding-top:8px; border-top:1px solid #2a2a2a;">
+      <div class="score-label" style="color:#fff; font-weight:600;">Sender Score</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:79%"></div></div>
+      <div class="score-value green" style="font-size:16px;">7.9</div>
+    </div>
+    <p class="note">Communication scored lower: email was brief and warm but didn't demonstrate deep knowledge of Greenhouse's business or specific strategic thinking. It felt like a CEO validating a BDM's outreach rather than leading with insight.</p>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="card">
+    <h2><span class="sn">03</span> Leadership Team Research</h2>
+    <table class="leader-table">
+      <thead>
+        <tr>
+          <th>Name</th><th>Title</th><th>LinkedIn</th><th>Background</th><th>Strengths</th><th>Risks</th><th>Score</th><th>Conf.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:#fff; font-weight:600;">Lucas Ballasy</td>
+          <td>CEO &amp; Partner</td>
+          <td><a href="https://www.linkedin.com/in/lucasjballasy/" target="_blank">LinkedIn</a></td>
+          <td>Temple Univ. (Art). At Barrel since 2013. Freelance designer &rarr; CEO. Co-founded Barrel Venture Partners.</td>
+          <td>13 years tenure, active content creator, venture arm shows strategic ambition</td>
+          <td>Design background, not a technical or strategy-first operator. Not the original founder.</td>
+          <td style="color:#22c55e; font-weight:600;">7.5</td>
+          <td><span class="confidence high">High</span></td>
+        </tr>
+        <tr>
+          <td style="color:#fff; font-weight:600;">Peter Kang</td>
+          <td>Co-founder &amp; Chairman, Barrel Holdings</td>
+          <td><a href="https://www.linkedin.com/in/peterkang34/" target="_blank">LinkedIn</a></td>
+          <td>Columbia Univ. Investment banking background. Founded Barrel 2006. Ran it for 18 years. Now runs Barrel Holdings.</td>
+          <td>20-year founder track record. Investment banking background. Strategic thinker. Writes at peterkang.com.</td>
+          <td>Stepped back from Barrel day-to-day in 2024. Less hands-on with client work now.</td>
+          <td style="color:#22c55e; font-weight:600;">8.0</td>
+          <td><span class="confidence high">High</span></td>
+        </tr>
+        <tr>
+          <td style="color:#fff; font-weight:600;">Sei-Wook Kim</td>
+          <td>Co-founder &amp; Vice Chairman, Barrel Holdings</td>
+          <td><a href="https://www.seiwook.com/" target="_blank">Personal Site</a></td>
+          <td>Columbia Univ. Self-taught coder. Was COO &amp; President of Barrel. Now oversees ops/finance/legal for portfolio.</td>
+          <td>Technical co-founder. Ops &amp; finance discipline. 20-year track record.</td>
+          <td>Stepped back from Barrel day-to-day. Focused on holding company level.</td>
+          <td style="color:#22c55e; font-weight:600;">7.5</td>
+          <td><span class="confidence high">High</span></td>
+        </tr>
+        <tr>
+          <td style="color:#fff; font-weight:600;">Wesley Turner-Harris</td>
+          <td>CTO &amp; Partner</td>
+          <td><a href="https://www.linkedin.com/in/wes-turner/" target="_blank">LinkedIn</a></td>
+          <td>BFA, City College of NY. At Barrel since April 2011. 20+ years building websites. Also partner at Barrel Venture Partners.</td>
+          <td>15 years tenure, deep technical experience, partner-level commitment</td>
+          <td>Limited public profile detail beyond Barrel</td>
+          <td style="color:#22c55e; font-weight:600;">7.0</td>
+          <td><span class="confidence medium">Medium</span></td>
+        </tr>
+        <tr>
+          <td>Nadia Reynolds</td>
+          <td>Business Development Manager</td>
+          <td>&mdash;</td>
+          <td>Confirmed on Barrel's about page. Sent initial response email with scoping questions.</td>
+          <td>Professional initial response, asked the right scoping questions</td>
+          <td>No public LinkedIn found. Junior sales role.</td>
+          <td style="color:#eab308; font-weight:600;">5.0</td>
+          <td><span class="confidence medium">Medium</span></td>
+        </tr>
+        <tr>
+          <td>Soliez Chua</td>
+          <td>Unknown</td>
+          <td>&mdash;</td>
+          <td>CC'd on the email. No public presence found.</td>
+          <td>&mdash;</td>
+          <td>No public profile, role unknown</td>
+          <td style="color:#888;">N/A</td>
+          <td><span class="confidence medium">Low</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr class="divider">
+    <div class="two-col">
+      <div>
+        <div class="score-row">
+          <div class="score-label">Leadership Avg Score</div>
+          <div class="score-bar-track"><div class="score-bar-fill green" style="width:70%"></div></div>
+          <div class="score-value green">7.0</div>
+        </div>
+        <div class="score-row">
+          <div class="score-label">Weighted Score (founders 2x)</div>
+          <div class="score-bar-track"><div class="score-bar-fill green" style="width:74%"></div></div>
+          <div class="score-value green">7.4</div>
+        </div>
+      </div>
+      <div>
+        <p class="note"><strong style="color:#fff;">Leadership Readout:</strong> Strong founding team with 20-year track record (Kang &amp; Kim), but they've stepped back to the holding company. Day-to-day is now run by Lucas Ballasy (CEO, design background) and Wes Turner (CTO). Solid bench depth for a boutique, but the strategic firepower has moved up a level. The team working with you will likely be capable executors; the question is whether strategic vision is still flowing down from Holdings.</p>
+      </div>
+    </div>
+    <p class="note" style="margin-top:12px;"><strong>Missing:</strong> No public profile found for Soliez Chua. David Remes (Partner Manager mentioned in email as having Shopify history) confirmed on website but not deeply profiled.</p>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="card">
+    <h2><span class="sn">04</span> Company Research</h2>
+    <dl class="data-grid">
+      <dt>Description</dt>
+      <dd>CPG commerce agency specializing in Shopify Plus builds, redesigns, and migrations for food/bev, beauty, and home/garden brands.</dd>
+      <dt>Services</dt>
+      <dd>
+        <span class="tag">Shopify Plus</span>
+        <span class="tag">Ecommerce Design</span>
+        <span class="tag">CRO</span>
+        <span class="tag">Retention Marketing</span>
+        <span class="tag">B2B Commerce</span>
+        <span class="tag">Headless</span>
+        <span class="tag">Custom Apps</span>
+        <span class="tag">Branding</span>
+      </dd>
+      <dt>Geography</dt>
+      <dd>New York, NY (HQ) + Los Angeles. Globally distributed team.</dd>
+      <dt>Apparent Size</dt>
+      <dd>10-75 employees (varies by source: 10-49 on Clutch, ~74 on LeadIQ, 11-50 on LinkedIn)</dd>
+      <dt>Founded</dt>
+      <dd>2006 (20 years in operation)</dd>
+      <dt>Pricing</dt>
+      <dd>$150-199/hr, $50K+ minimum projects</dd>
+      <dt>Shopify Status</dt>
+      <dd><strong style="color:#22c55e;">Shopify Premier Partner</strong> (highest tier). Partner since 2009, Plus since 2017.</dd>
+      <dt>Parent Company</dt>
+      <dd>Barrel Holdings (launched 2021) &mdash; also includes BX Studio, AO2</dd>
+      <dt>Minority-Owned</dt>
+      <dd>Yes (self-reported on Shopify directory)</dd>
+      <dt>Named Clients</dt>
+      <dd>McCormick, L'Oreal Paris, Sweet Loren's, Bobo's, The Outset (Scarlett Johansson), Once Upon a Farm, Kind Snacks, Cabot Creamery, Dr. Jart+, Black+Decker, ScottsMiracle-Gro, Cariuma, Barry's, Hu, Canyon Bakehouse, Instant Pot, Fire Dept Coffee</dd>
+      <dt>Client Mix</dt>
+      <dd>50% midmarket ($10M-$1B), 30% SMB, 20% enterprise</dd>
+      <dt>Research Content</dt>
+      <dd><a href="https://dtcpatterns.com" target="_blank">DTC Patterns</a> &mdash; 300+ published articles on ecommerce UX and marketing</dd>
+      <dt>Reviews</dt>
+      <dd>Clutch: listed but no client reviews. Glassdoor: 3.2/5 (19 reviews, 44% recommend). Shopify directory: no reviews yet.</dd>
+      <dt>Website Quality</dt>
+      <dd>Professional, clean, well-structured. Case studies have depth. Portfolio showcases real brand work. Blog/newsletter signal active thought leadership.</dd>
+    </dl>
+
+    <hr class="divider">
+    <h3 style="color:#fff; font-size:15px; margin-bottom:16px;">Company Sub-Scores</h3>
+    <div class="score-row">
+      <div class="score-label">Legitimacy</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:90%"></div></div>
+      <div class="score-value green">9.0</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label">Capability</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:80%"></div></div>
+      <div class="score-value green">8.0</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label">Specialization Fit</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:85%"></div></div>
+      <div class="score-value green">8.5</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label">Quality / Polish</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:75%"></div></div>
+      <div class="score-value green">7.5</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label">Proof of Execution</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:80%"></div></div>
+      <div class="score-value green">8.0</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label">Leadership Strength</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:74%"></div></div>
+      <div class="score-value green">7.4</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label">Sophisticated Client Handling</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:70%"></div></div>
+      <div class="score-value green">7.0</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label">Communication Maturity</div>
+      <div class="score-bar-track"><div class="score-bar-fill yellow" style="width:65%"></div></div>
+      <div class="score-value yellow">6.5</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label">Risk Level (10=no risk)</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:75%"></div></div>
+      <div class="score-value green">7.5</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label">Overall Confidence</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:75%"></div></div>
+      <div class="score-value green">7.5</div>
+    </div>
+    <div class="score-row" style="margin-top:8px; padding-top:8px; border-top:1px solid #2a2a2a;">
+      <div class="score-label" style="color:#fff; font-weight:600;">Company Score</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:77%"></div></div>
+      <div class="score-value green" style="font-size:16px;">7.7</div>
+    </div>
+    <p class="note">Communication maturity scored lower: Nadia's initial response was professional but formulaic (standard scoping questions). Lucas's follow-up was warm but brief. Neither email demonstrated deep strategic thinking about Greenhouse's specific business challenges. The Glassdoor score (3.2/5) is a mild concern for internal culture, though not uncommon for agencies.</p>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="card">
+    <h2><span class="sn">05</span> Overall Scoring</h2>
+    <div class="two-col">
+      <div>
+        <div class="score-row">
+          <div class="score-label" style="color:#fff;">Sender Score (25%)</div>
+          <div class="score-bar-track"><div class="score-bar-fill green" style="width:79%"></div></div>
+          <div class="score-value green">7.9</div>
+        </div>
+        <div class="score-row">
+          <div class="score-label" style="color:#fff;">Leadership Score (35%)</div>
+          <div class="score-bar-track"><div class="score-bar-fill green" style="width:74%"></div></div>
+          <div class="score-value green">7.4</div>
+        </div>
+        <div class="score-row">
+          <div class="score-label" style="color:#fff;">Company Score (40%)</div>
+          <div class="score-bar-track"><div class="score-bar-fill green" style="width:77%"></div></div>
+          <div class="score-value green">7.7</div>
+        </div>
+        <div class="score-row" style="margin-top:12px; padding-top:12px; border-top:1px solid #2a2a2a;">
+          <div class="score-label" style="color:#fff; font-weight:700; font-size:15px;">Aggregate Score</div>
+          <div class="score-bar-track"><div class="score-bar-fill green" style="width:72%"></div></div>
+          <div class="score-value green" style="font-size:18px; font-weight:700;">72</div>
+        </div>
+        <p class="note" style="margin-top:8px;">Formula: (7.9 &times; 0.25) + (7.4 &times; 0.35) + (7.7 &times; 0.40) = 7.64 &times; 10 &asymp; 72</p>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;">
+        <div class="score-circle tier-strong" style="width:120px; height:120px; font-size:40px;">
+          72
+          <span class="label">/ 100</span>
+        </div>
+        <div class="tier-badge strong">Strong Specialist Boutique</div>
+        <div style="margin-top:4px;"><span class="confidence high">High Confidence</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="card">
+    <h2><span class="sn">06</span> What This Means For You</h2>
+    <div class="rec-card">
+      <div class="rec-label">Expected Caliber</div>
+      <div class="rec-value">Strong Specialist Boutique</div>
+      <div class="rec-detail">A legitimate, 20-year-old Shopify Premier Partner agency with real CPG brand experience. Not a premium strategic consultancy, but a capable execution partner with enough strategic depth to handle a sophisticated client.</div>
+    </div>
+    <div class="rec-card">
+      <div class="rec-label">Likely Working Style</div>
+      <div class="rec-value">Process-driven, design-forward, Shopify-native</div>
+      <div class="rec-detail">Expect structured scoping conversations, design-led builds, and strong Shopify technical execution. Strategic input will likely be good but not transformative &mdash; you'll probably need to lead the strategic vision and let them execute.</div>
+    </div>
+    <div class="two-col" style="margin-top:12px;">
+      <div class="rec-card">
+        <div class="rec-label">Likely Strengths</div>
+        <div class="rec-value" style="font-size:14px;">
+          &bull; Deep Shopify Plus expertise (Premier Partner since 2017)<br>
+          &bull; CPG/food/bev specialization aligns with Greenhouse<br>
+          &bull; Real case studies with recognizable brands<br>
+          &bull; 20-year track record &mdash; not a fly-by-night<br>
+          &bull; CEO personally engaged from the start<br>
+          &bull; Existing Shopify connection (David worked with your team)
+        </div>
+      </div>
+      <div class="rec-card">
+        <div class="rec-label">Likely Weaknesses</div>
+        <div class="rec-value" style="font-size:14px;">
+          &bull; Founding strategic minds have stepped back to Holdings<br>
+          &bull; No third-party client reviews on Clutch or Shopify<br>
+          &bull; Glassdoor 3.2/5 suggests possible internal culture issues<br>
+          &bull; Initial emails were warm but not strategically sharp<br>
+          &bull; Mid-tier pricing may reflect mid-tier strategic depth<br>
+          &bull; Leadership transition (2024) means the org is still maturing under new CEO
+        </div>
+      </div>
+    </div>
+    <div class="rec-card" style="margin-top:12px;">
+      <div class="rec-label">Recommended Communication Style</div>
+      <div class="rec-value">Warm but evaluative</div>
+      <div class="rec-detail">Treat them as a credible partner worth evaluating further. Be direct about expectations and scope. Ask for specific case studies in food/bev ecommerce redesigns. Probe for strategic thinking &mdash; don't just accept execution-level conversations.</div>
+    </div>
+    <div class="rec-card">
+      <div class="rec-label">Recommended Diligence Level</div>
+      <div class="rec-value">Standard diligence</div>
+      <div class="rec-detail">Review their portfolio in detail (especially CPG/food-bev case studies). Ask for 1-2 client references from brands similar to Greenhouse. Ask about the team structure: who would actually be working on your account?</div>
+    </div>
+    <div class="rec-card">
+      <div class="rec-label">Should You Take the Meeting?</div>
+      <div class="rec-value">Yes</div>
+      <div class="rec-detail">This is a credible agency with relevant specialization and an existing connection to your team. Worth a discovery call. Use it to probe strategic depth and understand who beyond Lucas would be your day-to-day team.</div>
+    </div>
+    <div class="rec-card">
+      <div class="rec-label">Best Next Step</div>
+      <div class="rec-value">Reply with scope overview, request relevant case studies, schedule 30-min discovery call</div>
+      <div class="rec-detail">Answer Nadia's scoping questions (timeline, scope, budget range) and request 2-3 case studies of similar CPG Shopify redesigns. Then schedule a call with Lucas and the proposed project team to assess chemistry and strategic fit.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="card">
+    <h2><span class="sn">07</span> Fast Take</h2>
+    <div class="fast-take">
+      <ul>
+        <li><strong>Legitimacy:</strong> Very real. 20-year track record, Shopify Premier Partner, recognizable clients (McCormick, L'Oreal, The Outset). No question they exist and operate at scale.</li>
+        <li><strong>Competence:</strong> Strong in Shopify execution and CPG design. Strategic depth is adequate but not exceptional &mdash; the most strategic minds (founders) have stepped up to the holding company level.</li>
+        <li><strong>Polish:</strong> Good but not elite. Website is clean, case studies have depth, CEO has personal brand. However, initial email communication was warm-but-generic rather than insight-led.</li>
+        <li><strong>Risk:</strong> Low to moderate. The main risk is that you get solid execution without enough strategic partnership. Glassdoor score (3.2/5) and zero Clutch reviews are mild yellow flags, not red flags.</li>
+        <li><strong>Recommended Stance:</strong> Take the meeting. This is a legitimate specialist boutique with strong CPG/Shopify fit. Evaluate whether their strategic thinking matches your expectations, and make sure you meet the actual project team &mdash; not just the CEO.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="card">
+    <h2><span class="sn">08</span> Source Links</h2>
+    <div class="two-col">
+      <div>
+        <div class="source-group">
+          <h4>Sender</h4>
+          <ul>
+            <li><a href="https://www.linkedin.com/in/lucasjballasy/" target="_blank">Lucas Ballasy &mdash; LinkedIn</a></li>
+            <li><a href="https://www.lucasballasy.com/" target="_blank">Lucas Ballasy &mdash; Personal Blog</a></li>
+            <li><a href="https://www.barrelny.com/lucas-ballasy/" target="_blank">Lucas Ballasy &mdash; Barrel Bio</a></li>
+            <li><a href="https://x.com/lucasjballasy" target="_blank">Lucas Ballasy &mdash; X/Twitter</a></li>
+          </ul>
+        </div>
+        <div class="source-group">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="https://www.barrelny.com/" target="_blank">Barrel &mdash; Main Website</a></li>
+            <li><a href="https://www.barrelny.com/about" target="_blank">Barrel &mdash; About / Team</a></li>
+            <li><a href="https://www.barrelny.com/work/mccormick" target="_blank">Barrel &mdash; Case Studies</a></li>
+            <li><a href="https://www.barrelny.com/shopify-plus-ecommerce-agency" target="_blank">Barrel &mdash; Shopify Plus Page</a></li>
+            <li><a href="https://www.barrelny.com/newsletter" target="_blank">Barrel &mdash; Newsletter</a></li>
+            <li><a href="https://www.barrel-holdings.com/" target="_blank">Barrel Holdings</a></li>
+            <li><a href="https://www.linkedin.com/company/barrel" target="_blank">Barrel &mdash; LinkedIn Company</a></li>
+            <li><a href="https://www.crunchbase.com/organization/barrel" target="_blank">Barrel &mdash; Crunchbase</a></li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="source-group">
+          <h4>Leadership</h4>
+          <ul>
+            <li><a href="https://www.linkedin.com/in/peterkang34/" target="_blank">Peter Kang &mdash; LinkedIn (Co-founder)</a></li>
+            <li><a href="https://www.peterkang.com/" target="_blank">Peter Kang &mdash; Personal Blog</a></li>
+            <li><a href="https://www.seiwook.com/" target="_blank">Sei-Wook Kim &mdash; Personal Site (Co-founder)</a></li>
+            <li><a href="https://www.linkedin.com/in/wes-turner/" target="_blank">Wes Turner &mdash; LinkedIn (CTO)</a></li>
+            <li><a href="https://www.barrelny.com/wes-turner" target="_blank">Wes Turner &mdash; Barrel Bio</a></li>
+            <li><a href="https://www.barrel-holdings.com/meet-our-leadership-team" target="_blank">Barrel Holdings &mdash; Leadership</a></li>
+            <li><a href="https://theorg.com/org/barrel" target="_blank">Barrel &mdash; Org Chart (The Org)</a></li>
+          </ul>
+        </div>
+        <div class="source-group">
+          <h4>Reviews / Third-Party</h4>
+          <ul>
+            <li><a href="https://clutch.co/profile/barrel" target="_blank">Clutch Profile (no reviews)</a></li>
+            <li><a href="https://www.glassdoor.com/Reviews/Barrel-Reviews-E644307.htm" target="_blank">Glassdoor (3.2/5, 19 reviews)</a></li>
+            <li><a href="https://www.shopify.com/partners/directory/partner/barrel" target="_blank">Shopify Partners Directory</a></li>
+            <li><a href="https://www.agencyspotter.com/barrelny" target="_blank">Agency Spotter</a></li>
+            <li><a href="https://www.zoominfo.com/c/barrel-llc/347359135" target="_blank">ZoomInfo</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 9 -->
+  <div class="card">
+    <h2><span class="sn">09</span> Agency Fit Assessment</h2>
+    <div class="score-row">
+      <div class="score-label">Ecommerce Fit</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:85%"></div></div>
+      <div class="score-value green">8.5</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label">Strategic Depth</div>
+      <div class="score-bar-track"><div class="score-bar-fill yellow" style="width:65%"></div></div>
+      <div class="score-value yellow">6.5</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label">Execution Confidence</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:80%"></div></div>
+      <div class="score-value green">8.0</div>
+    </div>
+    <div class="score-row">
+      <div class="score-label">Taste / Design Maturity</div>
+      <div class="score-bar-track"><div class="score-bar-fill green" style="width:75%"></div></div>
+      <div class="score-value green">7.5</div>
+    </div>
+
+    <hr class="divider">
+    <div class="two-col">
+      <div>
+        <dl class="data-grid">
+          <dt>Best Fit Client Type</dt>
+          <dd>Mid-market CPG brands ($10M-$500M) doing DTC on Shopify Plus</dd>
+          <dt>Portfolio Assessment</dt>
+          <dd>Largely custom work, not templated. Strong food/bev and beauty focus. Case studies show real business context, not just pretty screenshots.</dd>
+          <dt>Operator Understanding</dt>
+          <dd>Their DTC Patterns research project (300+ articles) suggests genuine ecommerce operator understanding beyond just design/dev execution.</dd>
+        </dl>
+      </div>
+      <div>
+        <dl class="data-grid">
+          <dt>Communication w/ In-House Lead</dt>
+          <dd>Likely good. CEO personally engaged, BDM asked proper scoping questions. But expect to lead strategic direction yourself &mdash; they'll execute well on a clear brief.</dd>
+          <dt>Your Likely Experience</dt>
+          <dd>Professional, reliable, design-forward execution with solid Shopify chops. You'll get a polished Shopify Plus build. The risk is whether they push back with strategic insight or just follow your lead.</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="timestamp">
+    Generated April 6, 2026 &mdash; Vendor Credibility Assessment Tool
+  </div>
+
+</div>
+</body>
+</html>

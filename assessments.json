@@ -1,0 +1,387 @@
+{
+  "assessments": [
+    {
+      "id": "barrel",
+      "date": "2026-04-06",
+      "company": {
+        "name": "Barrel",
+        "domain": "barrelny.com",
+        "website": "https://www.barrelny.com",
+        "description": "CPG commerce agency specializing in Shopify Plus builds, redesigns, and migrations for food/bev, beauty, and home/garden brands.",
+        "services": ["Shopify Plus", "Ecommerce Design", "CRO", "Retention Marketing", "B2B Commerce", "Headless", "Custom Apps", "Branding"],
+        "geography": "New York, NY (HQ) + Los Angeles. Globally distributed.",
+        "size": "10-75 employees",
+        "founded": "2006",
+        "years_in_operation": 20,
+        "shopify_status": "Shopify Premier Partner (highest tier). Partner since 2009, Plus since 2017.",
+        "named_clients": ["McCormick", "L'Oreal Paris", "Sweet Loren's", "Bobo's", "The Outset", "Once Upon a Farm", "Kind Snacks", "Cabot Creamery", "Dr. Jart+", "Black+Decker", "ScottsMiracle-Gro", "Cariuma", "Barry's", "Hu", "Canyon Bakehouse", "Instant Pot", "Fire Dept Coffee"],
+        "client_mix": "50% midmarket ($10M-$1B), 30% SMB, 20% enterprise",
+        "reviews_summary": "Clutch: listed but no client reviews. Glassdoor: 3.2/5 (19 reviews, 44% recommend). Shopify directory: no reviews.",
+        "website_quality": "Professional, clean, well-structured. Case studies have depth. Blog/newsletter signal active thought leadership.",
+        "positioning": "CPG-focused Shopify specialist boutique. Premium pricing ($150-199/hr, $50K+ minimum).",
+        "red_flags": ["Zero Clutch reviews despite 20 years", "Glassdoor 3.2/5 (44% recommend)", "Founding team stepped back to Holdings in 2024"],
+        "positive_signals": ["Shopify Premier Partner (highest tier)", "20-year track record", "Real enterprise clients (McCormick, L'Oreal)", "DTC Patterns research (300+ articles)", "Minority-owned business", "Parent holding company (Barrel Holdings)"]
+      },
+      "sender": {
+        "name": "Lucas Ballasy",
+        "title": "CEO, Partner",
+        "email": "lucas.ballasy@barrelny.com",
+        "linkedin": "https://www.linkedin.com/in/lucasjballasy/",
+        "linkedin_confidence": "high",
+        "background": "Tyler School of Art (Temple University). Joined Barrel as freelance designer in 2013. Rose to Partner & CEO. Co-founded Barrel Venture Partners (2019). Helped launch Barrel Holdings (2021). Based in Bucks County, PA.",
+        "credibility_signals": ["CEO personally replying (not delegating to BDM)", "Uses Superhuman", "Personal blog (lucasballasy.com)", "13 years at company", "Co-founded venture arm"],
+        "concerns": ["Rose internally from designer — may be stronger on design/brand than strategy/tech", "Not the original founder (Kang & Kim founded in 2006)"],
+        "sub_scores": {
+          "seniority": 9.0,
+          "experience": 8.0,
+          "credibility": 8.0,
+          "communication": 6.5,
+          "trustworthiness": 8.0
+        },
+        "score": 7.9,
+        "score_rationale": "CEO personally replied. Strong tenure and credibility. Communication was warm but not strategically sharp — felt like CEO validating a BDM's outreach rather than leading with insight."
+      },
+      "leadership": [
+        {
+          "name": "Lucas Ballasy",
+          "title": "CEO & Partner",
+          "linkedin": "https://www.linkedin.com/in/lucasjballasy/",
+          "background": "Temple Univ. (Art). At Barrel since 2013. Freelance designer to CEO. Co-founded Barrel Venture Partners.",
+          "strengths": "13 years tenure, active content creator, venture arm shows strategic ambition",
+          "risks": "Design background, not a technical or strategy-first operator. Not the original founder.",
+          "score": 7.5,
+          "confidence": "high",
+          "weight": 2
+        },
+        {
+          "name": "Peter Kang",
+          "title": "Co-founder & Chairman, Barrel Holdings",
+          "linkedin": "https://www.linkedin.com/in/peterkang34/",
+          "background": "Columbia Univ. Investment banking background. Founded Barrel 2006. Ran it for 18 years. Now runs Barrel Holdings. Writes at peterkang.com.",
+          "strengths": "20-year founder track record. Investment banking background. Strategic thinker.",
+          "risks": "Stepped back from Barrel day-to-day in 2024. Less hands-on with client work.",
+          "score": 8.0,
+          "confidence": "high",
+          "weight": 2
+        },
+        {
+          "name": "Sei-Wook Kim",
+          "title": "Co-founder & Vice Chairman, Barrel Holdings",
+          "linkedin": "https://www.seiwook.com/",
+          "background": "Columbia Univ. Self-taught coder. Was COO & President of Barrel. Now oversees ops/finance/legal for portfolio.",
+          "strengths": "Technical co-founder. Ops & finance discipline. 20-year track record.",
+          "risks": "Stepped back from Barrel day-to-day. Focused on holding company level.",
+          "score": 7.5,
+          "confidence": "high",
+          "weight": 2
+        },
+        {
+          "name": "Wesley Turner-Harris",
+          "title": "CTO & Partner",
+          "linkedin": "https://www.linkedin.com/in/wes-turner/",
+          "background": "BFA, City College of NY. At Barrel since April 2011. 20+ years building websites. Also partner at Barrel Venture Partners.",
+          "strengths": "15 years tenure, deep technical experience, partner-level commitment",
+          "risks": "Limited public profile detail beyond Barrel",
+          "score": 7.0,
+          "confidence": "medium",
+          "weight": 1
+        },
+        {
+          "name": "Nadia Reynolds",
+          "title": "Business Development Manager",
+          "linkedin": "",
+          "background": "Confirmed on Barrel's about page. Sent initial response email with scoping questions.",
+          "strengths": "Professional initial response, asked proper scoping questions",
+          "risks": "No public LinkedIn found. Junior sales role.",
+          "score": 5.0,
+          "confidence": "medium",
+          "weight": 1
+        }
+      ],
+      "leadership_avg": 7.0,
+      "leadership_weighted": 7.4,
+      "leadership_readout": "Strong founding team with 20-year track record (Kang & Kim), but they've stepped back to the holding company. Day-to-day run by Lucas Ballasy (CEO, design background) and Wes Turner (CTO). Solid bench for a boutique, but strategic firepower has moved up a level.",
+      "company_sub_scores": {
+        "legitimacy": 9.0,
+        "capability": 8.0,
+        "specialization_fit": 8.5,
+        "quality_polish": 7.5,
+        "proof_of_execution": 8.0,
+        "leadership_strength": 7.4,
+        "sophisticated_client_handling": 7.0,
+        "communication_maturity": 6.5,
+        "risk_level": 7.5,
+        "overall_confidence": 7.5
+      },
+      "company_score": 7.7,
+      "company_score_rationale": "Legitimate, specialized, capable. Communication maturity and review gaps are the main weaknesses. The Glassdoor score (3.2/5) is a mild concern for internal culture.",
+      "scores": {
+        "sender": 7.9,
+        "leadership": 7.4,
+        "company": 7.7,
+        "aggregate": 72
+      },
+      "tier": "Strong Specialist Boutique",
+      "confidence": "high",
+      "email_summary": {
+        "subject": "Re: Greenhouse <> Barrel Intro",
+        "date_sent": "2026-04-02",
+        "offer_summary": "Response to Michael's outreach about a website redesign. Referral from Adam at Sircle. Barrel's Partner Manager David previously worked with Greenhouse's team at Shopify.",
+        "claims": ["Partner Manager David worked with Greenhouse team at Shopify", "Connected via Adam from Sircle"],
+        "cc_contacts": [
+          {"name": "Soliez Chua", "email": "soliez.chua@barrelny.com", "title": "Unknown"},
+          {"name": "Nadia Reynolds", "email": "nadia.reynolds@barrelny.com", "title": "Business Development Manager"}
+        ],
+        "email_client": "Superhuman Desktop"
+      },
+      "recommendation": {
+        "caliber": "Strong Specialist Boutique",
+        "working_style": "Process-driven, design-forward, Shopify-native. Expect structured scoping, design-led builds, strong Shopify execution. You'll likely need to lead strategic vision.",
+        "strengths": ["Deep Shopify Plus expertise (Premier Partner)", "CPG/food-bev specialization aligns with Greenhouse", "Real case studies with recognizable brands", "20-year track record", "CEO personally engaged", "Existing Shopify connection (David)"],
+        "weaknesses": ["Founding strategic minds stepped back to Holdings", "No third-party client reviews on Clutch", "Glassdoor 3.2/5 suggests possible culture issues", "Initial emails warm but not strategically sharp", "Leadership transition (2024) — org maturing under new CEO"],
+        "communication_style": "Warm but evaluative. Be direct about expectations. Ask for specific food/bev case studies. Probe for strategic thinking.",
+        "diligence_level": "Standard diligence. Review portfolio, ask for 1-2 references from similar brands. Ask who would actually work on your account.",
+        "take_the_meeting": true,
+        "next_step": "Reply with scope overview, request relevant CPG case studies, schedule 30-min discovery call with Lucas and the proposed project team."
+      },
+      "fast_take": {
+        "legitimacy": "Very real. 20-year track record, Shopify Premier Partner, recognizable clients (McCormick, L'Oreal, The Outset).",
+        "competence": "Strong in Shopify execution and CPG design. Strategic depth adequate but not exceptional — most strategic minds moved to Holdings.",
+        "polish": "Good but not elite. Clean website, case studies have depth. But emails were warm-not-insightful.",
+        "risk": "Low to moderate. Main risk: solid execution without enough strategic partnership. Glassdoor and zero Clutch reviews are mild yellow flags.",
+        "stance": "Take the meeting. Legitimate specialist boutique with strong CPG/Shopify fit. Evaluate strategic depth and meet the actual project team."
+      },
+      "agency_fit": {
+        "is_agency": true,
+        "ecommerce_fit": 8.5,
+        "strategic_depth": 6.5,
+        "execution_confidence": 8.0,
+        "taste_design_maturity": 7.5,
+        "best_fit_client": "Mid-market CPG brands ($10M-$500M) doing DTC on Shopify Plus",
+        "portfolio_assessment": "Largely custom work, not templated. Strong food/bev and beauty focus. Case studies show real business context.",
+        "operator_understanding": "DTC Patterns research project (300+ articles) shows genuine ecommerce operator understanding beyond design/dev."
+      },
+      "sources": {
+        "sender": [
+          {"label": "Lucas Ballasy — LinkedIn", "url": "https://www.linkedin.com/in/lucasjballasy/"},
+          {"label": "Lucas Ballasy — Personal Blog", "url": "https://www.lucasballasy.com/"},
+          {"label": "Lucas Ballasy — Barrel Bio", "url": "https://www.barrelny.com/lucas-ballasy/"},
+          {"label": "Lucas Ballasy — X/Twitter", "url": "https://x.com/lucasjballasy"}
+        ],
+        "company": [
+          {"label": "Barrel — Main Website", "url": "https://www.barrelny.com/"},
+          {"label": "Barrel — About / Team", "url": "https://www.barrelny.com/about"},
+          {"label": "Barrel — Case Studies", "url": "https://www.barrelny.com/work/mccormick"},
+          {"label": "Barrel — Shopify Plus Page", "url": "https://www.barrelny.com/shopify-plus-ecommerce-agency"},
+          {"label": "Barrel — Newsletter", "url": "https://www.barrelny.com/newsletter"},
+          {"label": "Barrel Holdings", "url": "https://www.barrel-holdings.com/"},
+          {"label": "Barrel — LinkedIn", "url": "https://www.linkedin.com/company/barrel"},
+          {"label": "Barrel — Crunchbase", "url": "https://www.crunchbase.com/organization/barrel"}
+        ],
+        "leadership": [
+          {"label": "Peter Kang — LinkedIn", "url": "https://www.linkedin.com/in/peterkang34/"},
+          {"label": "Peter Kang — Blog", "url": "https://www.peterkang.com/"},
+          {"label": "Sei-Wook Kim — Site", "url": "https://www.seiwook.com/"},
+          {"label": "Wes Turner — LinkedIn", "url": "https://www.linkedin.com/in/wes-turner/"},
+          {"label": "Wes Turner — Barrel Bio", "url": "https://www.barrelny.com/wes-turner"},
+          {"label": "Barrel Holdings — Leadership", "url": "https://www.barrel-holdings.com/meet-our-leadership-team"},
+          {"label": "Barrel — Org Chart (The Org)", "url": "https://theorg.com/org/barrel"}
+        ],
+        "reviews": [
+          {"label": "Clutch (no reviews)", "url": "https://clutch.co/profile/barrel"},
+          {"label": "Glassdoor (3.2/5)", "url": "https://www.glassdoor.com/Reviews/Barrel-Reviews-E644307.htm"},
+          {"label": "Shopify Partners Directory", "url": "https://www.shopify.com/partners/directory/partner/barrel"},
+          {"label": "Agency Spotter", "url": "https://www.agencyspotter.com/barrelny"},
+          {"label": "ZoomInfo", "url": "https://www.zoominfo.com/c/barrel-llc/347359135"}
+        ]
+      },
+      "discovery_questions": {
+        "key_risks": [
+          "Strategic depth may have left the building — founders stepped back to Holdings in 2024, CEO is a designer-turned-operator",
+          "Unknown who actually does the work — CEO and BDM are the only faces so far, no project team named",
+          "Zero third-party validation — 20 years, Shopify Premier Partner, but not a single Clutch review and Glassdoor 3.2/5",
+          "Communication was warm but not sharp — neither email demonstrated thinking about Greenhouse's specific business",
+          "Leadership transition is still fresh — org maturing under new CEO, culture and quality may be shifting"
+        ],
+        "questions": [
+          {
+            "category": "Strategic Depth",
+            "priority": "high",
+            "timing": "early",
+            "objective": "Test whether they can think about your business beyond 'redesign the Shopify store.'",
+            "question": "When you look at Greenhouse today — the brand, the site, the DTC experience — what's the one thing you'd change first, and why?",
+            "strong_answer": [
+              "They've actually looked at the site before the call",
+              "Name something specific and explain the business logic",
+              "Connect the recommendation to revenue, conversion, or brand positioning"
+            ],
+            "weak_answer": [
+              "'We'd need to do a full audit first'",
+              "Generic comments about 'modernizing the design'",
+              "They haven't looked at the site at all"
+            ]
+          },
+          {
+            "category": "Strategic Depth",
+            "priority": "high",
+            "timing": "middle",
+            "objective": "Determine whether strategic thinking still lives inside Barrel or left with the founders.",
+            "question": "I know Peter and Sei-Wook moved up to Barrel Holdings. How does that change how strategy gets done for clients today? Who's the person challenging our assumptions and pushing back on scope?",
+            "strong_answer": [
+              "Honest about the transition — doesn't pretend nothing changed",
+              "Names a specific person who owns strategic direction on accounts",
+              "Describes a real process for strategic input",
+              "Acknowledges the client will likely lead vision, explains how they complement that"
+            ],
+            "weak_answer": [
+              "'Nothing's changed, we still have the same approach'",
+              "Vague references to 'the team' without naming anyone",
+              "Deflects or seems uncomfortable with the question",
+              "Claims Lucas does strategy for all clients (he's CEO — he can't)"
+            ]
+          },
+          {
+            "category": "Team",
+            "priority": "high",
+            "timing": "early",
+            "objective": "Identify exactly who would be on your account and how senior they are.",
+            "question": "If we move forward, I want to know the actual humans. Who's the project lead, who's the lead designer, who's the lead developer — and what percentage of their time is on my account?",
+            "strong_answer": [
+              "Names specific people by name and role",
+              "Gives realistic time allocation",
+              "Offers to introduce them before signing",
+              "Acknowledges senior people are at key milestones, not daily"
+            ],
+            "weak_answer": [
+              "'We'll assign the right team based on scope'",
+              "Can't name anyone specific",
+              "Claims senior people are full-time (implausible at this size)",
+              "Gets defensive about the question"
+            ]
+          },
+          {
+            "category": "Proof of Competence",
+            "priority": "high",
+            "timing": "early",
+            "objective": "Validate that their CPG/food-bev work is real and comparable, not just logo decoration.",
+            "question": "Walk me through the Sweet Loren's or Bobo's project. What was the business problem, what did you actually build, and what happened to conversion or revenue after launch?",
+            "strong_answer": [
+              "Tells the story from the client's business problem, not 'we redesigned the site'",
+              "Mentions specific metrics: conversion rate, AOV, page speed, subscription uptake",
+              "Describes tradeoffs they made and why",
+              "Acknowledges what didn't work perfectly"
+            ],
+            "weak_answer": [
+              "'We migrated them to Shopify and redesigned the site'",
+              "No metrics, no business outcome",
+              "Can only describe what it looks like, not what it achieved",
+              "Refers you to the case study page instead of answering"
+            ]
+          },
+          {
+            "category": "Communication",
+            "priority": "medium",
+            "timing": "middle",
+            "objective": "Understand how they handle a client who has strong opinions and leads from the front.",
+            "question": "I'm hands-on. I have strong opinions about brand, UX, and conversion. I'll be in the details. How do you work with a client like that — and where do you push back?",
+            "strong_answer": [
+              "Welcomes it — doesn't treat it as a problem",
+              "Gives a real example of pushing back and how they framed it",
+              "Describes a clear decision-making framework",
+              "Acknowledges tension is productive"
+            ],
+            "weak_answer": [
+              "'We're very collaborative' (means nothing)",
+              "Seems nervous about a hands-on client",
+              "'We usually lead the creative process' (will clash)",
+              "Can't give a single example of pushing back"
+            ]
+          },
+          {
+            "category": "Execution",
+            "priority": "medium",
+            "timing": "middle",
+            "objective": "Pressure-test whether their process is real or performative.",
+            "question": "On a project this size, what does week 3 actually look like? Not the proposal timeline — the reality. What are we reviewing, who's in the room, and what decisions are we making?",
+            "strong_answer": [
+              "Describes a specific week with specifics (e.g., wireframe review for PDP and collections)",
+              "Shows they've done this enough to know the rhythm",
+              "Mentions where things typically get stuck and how they prevent it"
+            ],
+            "weak_answer": [
+              "Recites a generic 'discovery > design > development > QA' timeline",
+              "Can't get specific about any given week",
+              "'Every project is different' without pattern recognition"
+            ]
+          },
+          {
+            "category": "Failure",
+            "priority": "medium",
+            "timing": "late",
+            "objective": "See how they handle transparency about things going wrong.",
+            "question": "Tell me about a project in the last two years that didn't go well. What happened, and what did you change because of it?",
+            "strong_answer": [
+              "Actually names a project or real scenario",
+              "Describes what went wrong with honesty",
+              "Explains what they changed systemically",
+              "Doesn't blame the client entirely"
+            ],
+            "weak_answer": [
+              "'We haven't really had a project go wrong'",
+              "Blames the client completely",
+              "Gives a fake-humble answer",
+              "Can't name anything specific"
+            ]
+          },
+          {
+            "category": "Risk",
+            "priority": "low",
+            "timing": "late",
+            "objective": "Probe the Glassdoor score and zero-review pattern without being aggressive.",
+            "question": "I noticed you've been around 20 years but don't have Clutch reviews. And Glassdoor is mixed. That's not a dealbreaker — but I'm curious how you think about reputation and client satisfaction measurement. Do you track NPS or anything similar?",
+            "strong_answer": [
+              "Addresses it directly, not defensively",
+              "Explains why (e.g., 'we rely on referrals, never prioritized Clutch')",
+              "Describes how they measure client satisfaction internally",
+              "Acknowledges the Glassdoor score and what they're doing about it"
+            ],
+            "weak_answer": [
+              "Gets defensive or dismissive",
+              "'Those platforms don't matter'",
+              "No internal measurement of client satisfaction",
+              "Ignores the Glassdoor mention entirely"
+            ]
+          }
+        ],
+        "usage_guide": {
+          "ask_first": [
+            {"index": 3, "reason": "Case study walkthrough immediately tells you if they're real operators or portfolio decorators"},
+            {"index": 2, "reason": "Non-negotiable. If they can't name people, walk."}
+          ],
+          "ask_middle": [
+            {"index": 1, "reason": "Reveals organizational maturity after founder transition"},
+            {"index": 4, "reason": "Reveals cultural fit with a hands-on client"},
+            {"index": 5, "reason": "Separates experienced shops from ones running on vibes"}
+          ],
+          "ask_late": [
+            {"index": 6, "reason": "Trust signal — honesty about failure"},
+            {"index": 7, "reason": "Only if conversation is going well enough for diligence"}
+          ],
+          "lean_in_signals": [
+            "They name specific people, metrics, and tradeoffs",
+            "They push back on something you say (shows confidence)",
+            "They acknowledge the leadership transition honestly",
+            "They've looked at your site before the call"
+          ],
+          "walk_away_signals": [
+            "Can't name who works on your account",
+            "No metrics on any case study",
+            "Generic answers to every question",
+            "Gets defensive about founders stepping back or Glassdoor",
+            "Treats this like a sales call instead of a partnership evaluation"
+          ]
+        }
+      }
+    }
+  ]
+}
