@@ -9,7 +9,7 @@ const SUITE_LINKS = [
   {
     key: "jobs" as const,
     label: "Job Search",
-    href: "https://job-search-app-michaelxfan.vercel.app/",
+    href: "https://job-search-app-michael-fans-projects.vercel.app/",
   },
   {
     key: "intel" as const,
