@@ -22,7 +22,7 @@ export function ScoreBar({ label, value, emphasize }: Props) {
   return (
     <div className="flex items-center gap-2.5 mb-2">
       <div
-        className={`w-[210px] text-xs flex-shrink-0 ${
+        className={`w-[130px] md:w-[210px] text-xs flex-shrink-0 ${
           emphasize ? "text-white font-medium" : "text-dim"
         }`}
       >

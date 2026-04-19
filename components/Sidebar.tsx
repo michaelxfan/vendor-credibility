@@ -12,7 +12,7 @@ interface Props {
 
 export function Sidebar({ items, selectedId }: Props) {
   return (
-    <div className="w-[260px] border-r border-border overflow-y-auto bg-bg flex flex-col flex-shrink-0">
+    <div className="w-full md:w-[260px] h-full border-r border-border overflow-y-auto bg-bg flex flex-col flex-shrink-0">
       <div className="px-5 py-4 border-b border-border">
         <div className="flex items-center justify-between mb-3">
           <h1 className="text-[15px] font-semibold text-white tracking-tight">

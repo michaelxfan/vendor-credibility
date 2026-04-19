@@ -40,13 +40,13 @@ export function VendorDetail({ assessment: a }: Props) {
   return (
     <div>
       {/* Header */}
-      <header className="px-10 pt-8 pb-6 border-b border-border bg-bg sticky top-0 z-10">
-        <div className="flex items-start justify-between gap-5 flex-wrap">
-          <div>
-            <h1 className="text-[22px] font-semibold text-white tracking-tight">
+      <header className="px-4 pt-5 pb-4 md:px-10 md:pt-8 md:pb-6 border-b border-border bg-bg md:sticky md:top-0 md:z-10">
+        <div className="flex items-start justify-between gap-4 md:gap-5 flex-wrap">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-[19px] md:text-[22px] font-semibold text-white tracking-tight break-words">
               {a.company_name}
             </h1>
-            <div className="text-[13px] text-dim mt-1">
+            <div className="text-[12px] md:text-[13px] text-dim mt-1 break-words">
               {a.date}
               {a.sender_name && (
                 <>
@@ -66,7 +66,7 @@ export function VendorDetail({ assessment: a }: Props) {
                     href={a.company_website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-muted hover:text-accent"
+                    className="text-muted hover:text-accent break-all"
                   >
                     {a.company_domain ?? a.company_website}
                   </a>
@@ -82,10 +82,14 @@ export function VendorDetail({ assessment: a }: Props) {
             )}
           </div>
           {a.aggregate_score !== null && (
-            <div className="text-right">
-              <div className={`text-[40px] font-bold leading-none ${aggColorClass}`}>
+            <div className="text-right flex-shrink-0">
+              <div
+                className={`text-[32px] md:text-[40px] font-bold leading-none ${aggColorClass}`}
+              >
                 {a.aggregate_score}
-                <span className="text-[13px] text-dim font-normal ml-1">/100</span>
+                <span className="text-[12px] md:text-[13px] text-dim font-normal ml-1">
+                  /100
+                </span>
               </div>
             </div>
           )}
@@ -93,7 +97,7 @@ export function VendorDetail({ assessment: a }: Props) {
       </header>
 
       {/* Content */}
-      <div className="px-10 py-6 max-w-[860px]">
+      <div className="px-4 py-4 md:px-10 md:py-6 max-w-[860px]">
         <StatusBanner id={a.id} status={a.status} errorMessage={a.error_message} />
         {isComplete && <ExecutiveSummary assessment={a} />}
 

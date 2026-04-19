@@ -3,6 +3,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/server";
 import { Sidebar } from "@/components/Sidebar";
 import { VendorDetail } from "@/components/VendorDetail";
 import { EmptyState } from "@/components/EmptyState";
+import { MobileShell } from "@/components/MobileShell";
 
 export const dynamic = "force-dynamic";
 
@@ -34,19 +35,24 @@ export default async function Page({ searchParams }: PageProps) {
   const selectedId = params.id ?? list[0]?.id ?? null;
   const selected = selectedId ? await fetchAssessment(selectedId) : null;
 
+  const currentLabel =
+    selected?.company_name ??
+    (list.length === 0 ? "Vendor Credibility" : "Select a vendor");
+
   return (
-    <div className="flex h-full overflow-hidden">
-      <Sidebar items={list} selectedId={selectedId} />
-      <main className="flex-1 overflow-y-auto">
-        {selected ? (
+    <MobileShell
+      currentLabel={currentLabel}
+      sidebar={<Sidebar items={list} selectedId={selectedId} />}
+      main={
+        selected ? (
           <VendorDetail assessment={selected} />
         ) : (
           <EmptyState
             title="No vendors yet"
-            subtitle="Click “Attach email” in the sidebar to upload a vendor .eml and kick off research."
+            subtitle="Tap “Attach email” in the sidebar to upload a vendor .eml and kick off research."
           />
-        )}
-      </main>
-    </div>
+        )
+      }
+    />
   );
 }

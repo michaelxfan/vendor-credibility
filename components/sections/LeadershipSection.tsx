@@ -24,7 +24,8 @@ const SCORE_TEXT = {
 export function LeadershipSection({ leaders, average, weighted, readout }: Props) {
   return (
     <>
-      <table className="w-full text-xs">
+      <div className="overflow-x-auto -mx-4 md:mx-0 px-4 md:px-0">
+      <table className="w-full text-xs min-w-[720px] md:min-w-0">
         <thead>
           <tr>
             {["Name", "Title", "LinkedIn", "Strengths", "Risks", "Score", "Conf."].map(
@@ -78,6 +79,7 @@ export function LeadershipSection({ leaders, average, weighted, readout }: Props
           ))}
         </tbody>
       </table>
+      </div>
       <hr className="my-3 border-[#1f1f1f]" />
       {average !== null && <ScoreBar label="Average" value={average} />}
       {weighted !== null && (
