@@ -1,6 +1,7 @@
 import type { AssessmentRow } from "@/lib/types";
 import { TIER_COLORS, aggregateColor, tierSlug } from "@/lib/ui";
 import { Accordion } from "./Accordion";
+import { StatusBanner } from "./StatusBanner";
 import { ExecutiveSummary } from "./sections/ExecutiveSummary";
 import { EmailSummarySection } from "./sections/EmailSummarySection";
 import { SenderSection } from "./sections/SenderSection";
@@ -17,15 +18,18 @@ interface Props {
 }
 
 export function VendorDetail({ assessment: a }: Props) {
-  const ts = tierSlug(a.tier);
-  const tierColor = TIER_COLORS[ts];
-  const aggColor = aggregateColor(a.aggregate_score);
+  const isComplete = a.status === "complete" && a.aggregate_score !== null && a.tier;
+  const ts = a.tier ? tierSlug(a.tier) : null;
+  const tierColor = ts ? TIER_COLORS[ts] : null;
+  const aggColor = a.aggregate_score !== null ? aggregateColor(a.aggregate_score) : null;
   const aggColorClass =
     aggColor === "good"
       ? "text-good"
       : aggColor === "mid"
         ? "text-mid"
-        : "text-bad";
+        : aggColor === "bad"
+          ? "text-bad"
+          : "text-dim";
 
   const srcCount =
     (a.sources?.sender?.length ?? 0) +
@@ -69,24 +73,29 @@ export function VendorDetail({ assessment: a }: Props) {
                 </>
               )}
             </div>
-            <span
-              className={`inline-block mt-2 px-3 py-[3px] rounded-md text-[11px] font-semibold tracking-wide ${tierColor.bg} ${tierColor.text}`}
-            >
-              {a.tier}
-            </span>
+            {tierColor && a.tier && (
+              <span
+                className={`inline-block mt-2 px-3 py-[3px] rounded-md text-[11px] font-semibold tracking-wide ${tierColor.bg} ${tierColor.text}`}
+              >
+                {a.tier}
+              </span>
+            )}
           </div>
-          <div className="text-right">
-            <div className={`text-[40px] font-bold leading-none ${aggColorClass}`}>
-              {a.aggregate_score}
-              <span className="text-[13px] text-dim font-normal ml-1">/100</span>
+          {a.aggregate_score !== null && (
+            <div className="text-right">
+              <div className={`text-[40px] font-bold leading-none ${aggColorClass}`}>
+                {a.aggregate_score}
+                <span className="text-[13px] text-dim font-normal ml-1">/100</span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </header>
 
       {/* Content */}
       <div className="px-10 py-6 max-w-[860px]">
-        <ExecutiveSummary assessment={a} />
+        <StatusBanner id={a.id} status={a.status} errorMessage={a.error_message} />
+        {isComplete && <ExecutiveSummary assessment={a} />}
 
         {a.email_summary && (
           <Accordion
@@ -96,62 +105,71 @@ export function VendorDetail({ assessment: a }: Props) {
             preview={`${a.sender_name ?? "?"}${
               a.sender_title ? ` (${a.sender_title})` : ""
             } — ${a.email_summary.subject ?? ""}`}
+            defaultOpen={!isComplete}
           >
             <EmailSummarySection a={a} />
           </Accordion>
         )}
 
-        <Accordion
-          id="sender"
-          vendorId={a.id}
-          title="Sender Research"
-          preview={`Score ${a.sender.score}/10 — ${a.sender.title ?? ""}, ${
-            a.sender.sub_scores.communication < 7 ? "moderate" : "strong"
-          } communication`}
-        >
-          <SenderSection sender={a.sender} companyName={a.company_name} />
-        </Accordion>
+        {a.sender && a.sender.sub_scores && (
+          <Accordion
+            id="sender"
+            vendorId={a.id}
+            title="Sender Research"
+            preview={`Score ${a.sender.score}/10 — ${a.sender.title ?? ""}, ${
+              a.sender.sub_scores.communication < 7 ? "moderate" : "strong"
+            } communication`}
+          >
+            <SenderSection sender={a.sender} companyName={a.company_name} />
+          </Accordion>
+        )}
 
-        <Accordion
-          id="leadership"
-          vendorId={a.id}
-          title="Leadership"
-          preview={`Weighted ${a.leadership_weighted ?? a.leadership_score}/10 — ${
-            a.leadership.filter((l) => (l.weight ?? 1) >= 2).length
-          } senior leaders found`}
-        >
-          <LeadershipSection
-            leaders={a.leadership}
-            average={a.leadership_avg}
-            weighted={a.leadership_weighted}
-            readout={a.leadership_readout}
-          />
-        </Accordion>
+        {a.leadership && a.leadership.length > 0 && (
+          <Accordion
+            id="leadership"
+            vendorId={a.id}
+            title="Leadership"
+            preview={`Weighted ${a.leadership_weighted ?? a.leadership_score ?? "?"}/10 — ${
+              a.leadership.filter((l) => (l.weight ?? 1) >= 2).length
+            } senior leaders found`}
+          >
+            <LeadershipSection
+              leaders={a.leadership}
+              average={a.leadership_avg}
+              weighted={a.leadership_weighted}
+              readout={a.leadership_readout}
+            />
+          </Accordion>
+        )}
 
-        <Accordion
-          id="company"
-          vendorId={a.id}
-          title="Company Research"
-          preview={`Score ${a.company_score}/10 — ${(
-            a.company.positioning ?? ""
-          ).slice(0, 70)}`}
-        >
-          <CompanySection
-            company={a.company}
-            subScores={a.company_sub_scores}
-            companyScore={a.company_score}
-            rationale={a.company_score_rationale}
-          />
-        </Accordion>
+        {a.company && a.company_score !== null && (
+          <Accordion
+            id="company"
+            vendorId={a.id}
+            title="Company Research"
+            preview={`Score ${a.company_score}/10 — ${(
+              a.company.positioning ?? ""
+            ).slice(0, 70)}`}
+          >
+            <CompanySection
+              company={a.company}
+              subScores={a.company_sub_scores}
+              companyScore={a.company_score}
+              rationale={a.company_score_rationale}
+            />
+          </Accordion>
+        )}
 
-        <Accordion
-          id="scoring"
-          vendorId={a.id}
-          title="Overall Scoring"
-          preview={`Sender ${a.scores.sender} + Leadership ${a.scores.leadership} + Company ${a.scores.company} = ${a.scores.aggregate}`}
-        >
-          <ScoringSection scores={a.scores} />
-        </Accordion>
+        {a.scores && (
+          <Accordion
+            id="scoring"
+            vendorId={a.id}
+            title="Overall Scoring"
+            preview={`Sender ${a.scores.sender} + Leadership ${a.scores.leadership} + Company ${a.scores.company} = ${a.scores.aggregate}`}
+          >
+            <ScoringSection scores={a.scores} />
+          </Accordion>
+        )}
 
         {a.recommendation && (
           <Accordion

@@ -151,16 +151,19 @@ export interface DiscoveryQuestions {
   usage_guide: UsageGuide;
 }
 
+export type AssessmentStatus = "pending" | "researching" | "complete" | "error";
+
 // Shape of a row pulled from Supabase (camelCase of column name).
 export interface AssessmentRow {
   id: string;
   date: string;
-  tier: string;
-  confidence: Confidence;
-  aggregate_score: number;
-  sender_score: number;
-  leadership_score: number;
-  company_score: number;
+  status: AssessmentStatus;
+  tier: string | null;
+  confidence: Confidence | null;
+  aggregate_score: number | null;
+  sender_score: number | null;
+  leadership_score: number | null;
+  company_score: number | null;
   company_name: string;
   company_domain: string | null;
   company_website: string | null;
@@ -169,21 +172,24 @@ export interface AssessmentRow {
   sender_email: string | null;
   take_the_meeting: boolean | null;
 
-  company: Company;
-  sender: Sender;
+  company: Company | null;
+  sender: Sender | null;
   leadership: Leader[];
   leadership_avg: number | null;
   leadership_weighted: number | null;
   leadership_readout: string | null;
   company_sub_scores: CompanySubScores | null;
   company_score_rationale: string | null;
-  scores: Scores;
+  scores: Scores | null;
   email_summary: EmailSummary | null;
   recommendation: Recommendation | null;
   fast_take: FastTake | null;
   agency_fit: AgencyFit | null;
   sources: Sources;
   discovery_questions: DiscoveryQuestions | null;
+
+  raw_email: string | null;
+  error_message: string | null;
 
   created_at: string;
   updated_at: string;
@@ -193,9 +199,10 @@ export interface AssessmentRow {
 export interface AssessmentListItem {
   id: string;
   date: string;
-  tier: string;
-  confidence: Confidence;
-  aggregate_score: number;
+  status: AssessmentStatus;
+  tier: string | null;
+  confidence: Confidence | null;
+  aggregate_score: number | null;
   company_name: string;
   company_domain: string | null;
   sender_name: string | null;

@@ -33,8 +33,15 @@ export function ExecutiveSummary({ assessment: a }: Props) {
   return (
     <div className="py-6 mb-2">
       <div className="text-[15px] text-white font-medium mb-4">
-        {a.tier} — {a.aggregate_score}/100 —{" "}
-        <span className={CONF_TEXT[a.confidence]}>{a.confidence} confidence</span>
+        {a.tier} — {a.aggregate_score}/100
+        {a.confidence && (
+          <>
+            {" — "}
+            <span className={CONF_TEXT[a.confidence]}>
+              {a.confidence} confidence
+            </span>
+          </>
+        )}
       </div>
       <ul className="space-y-0">
         {[

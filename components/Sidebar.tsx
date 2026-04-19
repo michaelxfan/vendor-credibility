@@ -3,6 +3,7 @@ import type { AssessmentListItem } from "@/lib/types";
 import { aggregateColor } from "@/lib/ui";
 import { SearchInput } from "./SearchInput";
 import { FocusToggle } from "./FocusToggle";
+import { AttachEmailButton } from "./AttachEmailButton";
 
 interface Props {
   items: AssessmentListItem[];
@@ -21,6 +22,7 @@ export function Sidebar({ items, selectedId }: Props) {
             {items.length} {items.length === 1 ? "vendor" : "vendors"}
           </span>
         </div>
+        <AttachEmailButton />
         <SearchInput />
         <FocusToggle />
       </div>
@@ -30,13 +32,16 @@ export function Sidebar({ items, selectedId }: Props) {
           <div className="p-10 text-center text-dim text-sm">No vendors yet.</div>
         ) : (
           items.map((item) => {
-            const color = aggregateColor(item.aggregate_score);
+            const isComplete = item.status === "complete" && item.aggregate_score !== null;
+            const color = isComplete ? aggregateColor(item.aggregate_score!) : null;
             const colorClass =
               color === "good"
                 ? "text-good"
                 : color === "mid"
                   ? "text-mid"
-                  : "text-bad";
+                  : color === "bad"
+                    ? "text-bad"
+                    : "text-dim";
             const active = item.id === selectedId;
             return (
               <Link
@@ -49,14 +54,31 @@ export function Sidebar({ items, selectedId }: Props) {
                     : "hover:bg-surface"
                 }`}
               >
-                <div className="text-sm text-white font-medium">
+                <div className="text-sm text-white font-medium flex items-center gap-1.5">
+                  {item.status === "researching" && (
+                    <span className="inline-block w-2.5 h-2.5 border-[1.5px] border-accent/40 border-t-accent rounded-full animate-spin" />
+                  )}
+                  {item.status === "pending" && (
+                    <span className="inline-block w-2 h-2 bg-mid rounded-full" />
+                  )}
+                  {item.status === "error" && (
+                    <span className="inline-block w-2 h-2 bg-bad rounded-full" />
+                  )}
                   {item.company_name}
                 </div>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className={`text-lg font-bold ${colorClass}`}>
-                    {item.aggregate_score}
-                  </span>
-                  <span className="text-[11px] text-muted">{item.tier}</span>
+                  {isComplete ? (
+                    <>
+                      <span className={`text-lg font-bold ${colorClass}`}>
+                        {item.aggregate_score}
+                      </span>
+                      <span className="text-[11px] text-muted">{item.tier}</span>
+                    </>
+                  ) : (
+                    <span className="text-[11px] text-muted capitalize">
+                      {item.status === "researching" ? "Researching…" : item.status}
+                    </span>
+                  )}
                 </div>
                 <div className="text-[11px] text-dim mt-0.5">
                   {item.date} · {item.sender_name ?? "—"}

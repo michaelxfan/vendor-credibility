@@ -7,12 +7,14 @@ interface Props {
 
 export function EmailSummarySection({ a }: Props) {
   const es = a.email_summary!;
-  const s = a.sender;
+  const senderName = a.sender?.name ?? a.sender_name ?? "—";
+  const senderTitle = a.sender?.title ?? a.sender_title ?? null;
+  const senderEmail = a.sender?.email ?? a.sender_email ?? null;
   return (
     <DataGrid
       rows={[
-        ["Sender", `${s.name}${s.title ? ` — ${s.title}` : ""}`],
-        ["Email", s.email ? <a href={`mailto:${s.email}`} className="text-accent">{s.email}</a> : "—"],
+        ["Sender", `${senderName}${senderTitle ? ` — ${senderTitle}` : ""}`],
+        ["Email", senderEmail ? <a href={`mailto:${senderEmail}`} className="text-accent">{senderEmail}</a> : "—"],
         ["Subject", es.subject ?? "—"],
         ["Date", es.date_sent ?? "—"],
         ["Email Client", es.email_client ?? "Unknown"],
