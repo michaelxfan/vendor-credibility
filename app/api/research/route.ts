@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
     .eq("id", id);
 
   try {
-    const { assessment, steps, web_searches } = await runResearch(
+    const { assessment, web_searches } = await runResearch(
       {
         id,
         raw_email: row.raw_email,
@@ -156,7 +156,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: updateErr.message }, { status: 500 });
     }
 
-    return NextResponse.json({ id, status: "complete", steps, web_searches });
+    return NextResponse.json({ id, status: "complete", web_searches });
   } catch (err) {
     const msg = (err as Error).message;
     await sb
