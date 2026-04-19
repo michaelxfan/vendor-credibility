@@ -129,22 +129,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Fire-and-forget research call. Don't await — return immediately so UI can
-  // redirect. Research route is idempotent and owns its own lifecycle.
-  const origin = new URL(req.url).origin;
-  const secret = process.env.VC_API_SECRET;
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (secret) headers["Authorization"] = `Bearer ${secret}`;
-  fetch(`${origin}/api/research`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({ id }),
-  }).catch((err) => {
-    console.error("intake → research fetch failed:", err);
-  });
-
+  // The client (StatusBanner) fires POST /api/research after redirecting to
+  // the new row — a server-side fire-and-forget fetch is unreliable on Vercel
+  // serverless because the outbound request can be killed when /api/intake's
+  // response is sent. Keeping the trigger client-side means it's driven by
+  // the user's tab, which is more robust.
   return NextResponse.json(
-    { id, status: "pending", message: "research starting" },
+    { id, status: "pending", message: "stub created; client will trigger research" },
     { status: 202 }
   );
 }

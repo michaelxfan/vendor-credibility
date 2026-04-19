@@ -98,7 +98,12 @@ export function VendorDetail({ assessment: a }: Props) {
 
       {/* Content */}
       <div className="px-4 py-4 md:px-10 md:py-6 max-w-[860px]">
-        <StatusBanner id={a.id} status={a.status} errorMessage={a.error_message} />
+        <StatusBanner
+          id={a.id}
+          status={a.status}
+          errorMessage={a.error_message}
+          updatedAt={a.updated_at}
+        />
         {isComplete && <ExecutiveSummary assessment={a} />}
 
         {a.email_summary && (

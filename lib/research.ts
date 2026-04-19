@@ -8,8 +8,11 @@ import Anthropic from "@anthropic-ai/sdk";
  */
 
 const MODEL = "claude-sonnet-4-5-20250929";
-const MAX_TOOL_ROUNDS = 15;
-const MAX_WEB_USES = 10;
+// Tuned for Vercel hobby's 60s serverless timeout: one API call with
+// server-side web_search tool, constrained to a small search budget.
+const MAX_TOOL_ROUNDS = 2;
+const MAX_WEB_USES = 4;
+const MAX_TOKENS = 8192;
 
 const SYSTEM_PROMPT = `You are an operator-grade vendor credibility research agent.
 
@@ -183,19 +186,27 @@ Run the research now. Use web_search as needed. When done, emit the <assessment>
   while (steps < MAX_TOOL_ROUNDS) {
     steps++;
 
-    const response = await client.messages.create({
+    // Stream the response so we don't block on a single long RPC; Vercel
+    // serverless stays alive as bytes arrive. The SDK aggregates chunks
+    // and returns the full message at the end.
+    const remaining = MAX_WEB_USES - webSearches;
+    const stream = client.messages.stream({
       model: MODEL,
-      max_tokens: 16384,
+      max_tokens: MAX_TOKENS,
       system: SYSTEM_PROMPT,
-      tools: [
-        {
-          type: "web_search_20250305",
-          name: "web_search",
-          max_uses: MAX_WEB_USES - webSearches,
-        },
-      ],
+      tools:
+        remaining > 0
+          ? [
+              {
+                type: "web_search_20250305",
+                name: "web_search",
+                max_uses: remaining,
+              },
+            ]
+          : undefined,
       messages,
     });
+    const response = await stream.finalMessage();
 
     // Count web searches used
     for (const block of response.content) {

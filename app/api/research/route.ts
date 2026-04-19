@@ -3,9 +3,10 @@ import { getSupabaseServer, isSupabaseConfigured } from "@/lib/supabase/server";
 import { runResearch } from "@/lib/research";
 
 export const runtime = "nodejs";
-// Research can take a while (web_search round-trips). Pro plan: up to 800s;
-// hobby caps at 60s. We cap logic-side in lib/research.ts via MAX_TOOL_ROUNDS.
-export const maxDuration = 300;
+// Vercel hobby caps at 60s. We keep maxDuration = 60 so Vercel doesn't reject
+// the deployment; lib/research.ts keeps the Anthropic call under that budget
+// via a tight MAX_WEB_USES + MAX_TOOL_ROUNDS configuration.
+export const maxDuration = 60;
 
 function authorized(req: NextRequest): boolean {
   const secret = process.env.VC_API_SECRET;
@@ -50,7 +51,7 @@ export async function POST(req: NextRequest) {
   const sb = getSupabaseServer();
   const { data: row, error: readErr } = await sb
     .from("assessments")
-    .select("id,status,raw_email,company_name,sender_name,sender_email,company_domain")
+    .select("id,status,raw_email,company_name,sender_name,sender_email,company_domain,updated_at")
     .eq("id", id)
     .maybeSingle();
 
@@ -69,12 +70,29 @@ export async function POST(req: NextRequest) {
   if (row.status === "complete") {
     return NextResponse.json({ status: "complete", id, message: "already complete" });
   }
+  // Stuck-row auto-recovery: a previous invocation was force-killed by the
+  // Vercel timeout before it could write status. If the row hasn't been
+  // touched in >90s, treat it as abandoned and reclaim it.
   if (row.status === "researching") {
-    return NextResponse.json({ status: "researching", id, message: "already in progress" });
+    const lastTouch = new Date(row.updated_at).getTime();
+    const ageMs = Date.now() - lastTouch;
+    if (ageMs < 90_000) {
+      return NextResponse.json({
+        status: "researching",
+        id,
+        message: `already in progress (${Math.round(ageMs / 1000)}s ago)`,
+      });
+    }
+    console.warn(
+      `reclaiming stuck research row ${id} (last updated ${Math.round(ageMs / 1000)}s ago)`
+    );
   }
 
-  // Mark as researching
-  await sb.from("assessments").update({ status: "researching", error_message: null }).eq("id", id);
+  // Mark as researching (this also bumps updated_at so stuck detection works)
+  await sb
+    .from("assessments")
+    .update({ status: "researching", error_message: null })
+    .eq("id", id);
 
   try {
     const { assessment, steps, web_searches } = await runResearch(
