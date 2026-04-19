@@ -382,6 +382,309 @@
           ]
         }
       }
+    },
+    {
+      "id": "pulp-and-wire",
+      "date": "2026-04-07",
+      "company": {
+        "name": "Pulp+Wire",
+        "domain": "pulpandwire.com",
+        "website": "https://pulpandwire.com",
+        "description": "CPG-focused brand strategy, packaging design, and digital agency. Self-described 'Brand Alchemists.' Primarily a branding/packaging shop that also does web design and development as a secondary service.",
+        "services": ["Brand Strategy", "Packaging Design", "Brand Identity", "Website Design", "Website Development", "Content Creation", "Social Media", "Production & Compliance"],
+        "geography": "Portland, Maine (2 Milk Street, Portland, ME 04101)",
+        "size": "10-49 employees (15+ named team members on site)",
+        "founded": "2004",
+        "years_in_operation": 22,
+        "shopify_status": "Not a Shopify Partner. Has built on Shopify (Base Culture case study) but does not market Shopify expertise.",
+        "named_clients": ["Magnolia Bakery", "Bob's Red Mill", "Dr. Praeger's", "Vermont Creamery", "Petco (Well & Good)", "The Honest Kitchen", "Allagash Brewing", "Love Beets", "Luke's Lobster", "Atlantic Sea Farms", "Coast of Maine", "FLIPZ", "RIND Snacks", "Base Culture"],
+        "client_mix": "60% midmarket ($10M-$1B), 30% SMB, 10% enterprise",
+        "reviews_summary": "Clutch: listed, 0 reviews. Google: 4.5/5 (2 reviews). No Glassdoor rating available. DesignRush and Agency Spotter listed.",
+        "website_quality": "Clean, brand-forward. Strong visual design. Portfolio heavily skewed toward packaging and branding with ~20 of 50+ case studies tagged as web.",
+        "positioning": "Premium CPG branding and packaging agency. Web is a secondary service line. Claims 500+ CMOs served, 1,000+ brand collaborations.",
+        "red_flags": ["Web/ecommerce is NOT their core competency — it's ancillary", "No Shopify Partner or Expert designation", "Zero Clutch reviews despite 22 years", "Only 2 Google reviews", "No evidence of complex ecommerce builds (subscription, custom checkout, app integrations)", "Web design is only 8% of service mix on Clutch", "Team page returned 404"],
+        "positive_signals": ["22-year track record", "Ad Age Small Agency of the Year (Silver, 2023)", "Inc. 5000 honoree", "Strong CPG client roster (Magnolia Bakery, Bob's Red Mill, Petco)", "100% woman-owned", "Forbes, Entrepreneur, Fast Company press", "Naomi has HBO and Crowdtap background"]
+      },
+      "sender": {
+        "name": "Naomi Davidowitz",
+        "title": "Managing Director, Partner",
+        "email": "naomi@pulpandwire.com",
+        "linkedin": "https://www.linkedin.com/in/naomi-davidowitz-0a76401/",
+        "linkedin_confidence": "high",
+        "background": "BA Journalism (Arizona). Prior roles at HBO, Crowdtap, and Ceci New York. Skills in management of creative teams, social media, strategic partnerships, brand development, sales.",
+        "credibility_signals": ["Managing Director & Partner — senior decision-maker", "HBO and Crowdtap background — real brand experience", "Responsive and professional communication", "Proactively confirmed meeting and sent Zoom invite"],
+        "concerns": ["Journalism background, not ecommerce or tech", "No public evidence of Shopify/ecommerce expertise personally"],
+        "sub_scores": {
+          "seniority": 8.5,
+          "experience": 6.0,
+          "credibility": 7.0,
+          "communication": 8.0,
+          "trustworthiness": 8.0
+        },
+        "score": 7.5,
+        "score_rationale": "Senior partner with real brand management background. Communication was warm, responsive, and professional — confirmed meeting and acknowledged requirements quickly. However, no evidence of personal ecommerce or Shopify expertise, which matters for this specific engagement."
+      },
+      "leadership": [
+        {
+          "name": "Taja Dockendorf",
+          "title": "Founder & Creative Director",
+          "linkedin": "https://www.linkedin.com/in/tajadockendorf/",
+          "background": "Started Pulp+Wire at age ~23 in 2004. Industrial/automotive design background, pivoted to graphic design. Host of Brand Alchemist Podcast. Forbes, Entrepreneur, Fast Company contributor. Fast Company Executive Board member.",
+          "strengths": "22-year founder, strong creative vision, media presence, award-winning agency builder",
+          "risks": "Creative/design background — not a tech or ecommerce operator. Agency success is built on branding/packaging, not digital builds.",
+          "score": 7.5,
+          "confidence": "high",
+          "weight": 2
+        },
+        {
+          "name": "Naomi Davidowitz",
+          "title": "Managing Director, Partner",
+          "linkedin": "https://www.linkedin.com/in/naomi-davidowitz-0a76401/",
+          "background": "BA Journalism. Prior: HBO, Crowdtap, Ceci New York. Manages operations and client relationships.",
+          "strengths": "Strong brand and media background (HBO, Crowdtap). Partner-level, directly engaged.",
+          "risks": "No ecommerce or technical background visible. Journalism/media background, not digital product.",
+          "score": 6.5,
+          "confidence": "high",
+          "weight": 2
+        }
+      ],
+      "leadership_avg": 7.0,
+      "leadership_weighted": 7.0,
+      "leadership_readout": "Two-person leadership team: founder Taja Dockendorf (creative director, 22-year track record) and Naomi Davidowitz (managing director, brand/media background). Both are strong in branding and CPG positioning. Neither has visible ecommerce or technical depth, which is the core need for this project.",
+      "company_sub_scores": {
+        "legitimacy": 9.0,
+        "capability": 5.5,
+        "specialization_fit": 4.5,
+        "quality_polish": 8.0,
+        "proof_of_execution": 5.0,
+        "leadership_strength": 7.0,
+        "sophisticated_client_handling": 6.5,
+        "communication_maturity": 7.5,
+        "risk_level": 5.0,
+        "overall_confidence": 6.0
+      },
+      "company_score": 6.4,
+      "company_score_rationale": "Highly legitimate and award-winning CPG branding agency. But capability and specialization scores are low because the project requires complex Shopify ecommerce (subscription, multi-geo, fulfillment logic) — and web dev is their secondary service line. No Shopify Partner status, no evidence of complex builds.",
+      "scores": {
+        "sender": 7.5,
+        "leadership": 7.0,
+        "company": 6.4,
+        "aggregate": 69
+      },
+      "tier": "Strong Specialist Boutique",
+      "confidence": "high",
+      "email_summary": {
+        "subject": "Re: Pulp+Wire x Greenhouse Juice",
+        "date_sent": "2026-04-06",
+        "offer_summary": "Reply confirming a meeting scheduled for Wednesday April 8 at 2pm EST via Zoom. Naomi acknowledged receiving Greenhouse's requirements overview. This is a follow-up in an ongoing thread — Michael had shared project requirements including omnichannel Shopify build with subscription, multi-geo, and fulfillment complexity.",
+        "claims": ["Discovered Greenhouse at Expo East years ago", "Focus on CPG brands coming to market and established brands looking to elevate visual identity and creative strategy"],
+        "cc_contacts": [],
+        "email_client": "Gmail (Google Workspace)"
+      },
+      "recommendation": {
+        "caliber": "Strong Specialist Boutique — but for branding, not ecommerce builds",
+        "working_style": "Creative-led, brand-strategy-first. Expect strong visual thinking and packaging-level design quality. Expect less depth on Shopify architecture, subscription flows, or technical ecommerce decisions.",
+        "strengths": ["Exceptional CPG branding and packaging design", "22-year track record with award recognition", "Strong client roster (Magnolia Bakery, Bob's Red Mill, Petco)", "Naomi is responsive and professional", "They understand CPG brand positioning deeply"],
+        "weaknesses": ["Web/ecommerce is not their core — it's ~8% of their service mix", "No Shopify Partner designation", "No evidence of complex Shopify builds (subscription, multi-geo, fulfillment)", "Leadership has no visible ecommerce or technical background", "Zero Clutch reviews after 22 years", "Team page is broken (404)"],
+        "communication_style": "Warm but probing. They'll be excellent on brand and creative conversations. Use the meeting to specifically test their Shopify and ecommerce capabilities — this is where the gap likely is.",
+        "diligence_level": "High diligence on technical capability. Ask specifically: do they have in-house Shopify developers or do they subcontract? Have they built subscription flows, multi-geo stores, or fulfillment-integrated sites? Request references from past Shopify builds.",
+        "take_the_meeting": true,
+        "next_step": "Take the meeting (already scheduled for April 8). Use it to probe ecommerce capability hard. Ask for Shopify-specific case studies and whether dev is in-house or outsourced. Consider them as a branding/creative partner with a separate Shopify agency handling the build."
+      },
+      "fast_take": {
+        "legitimacy": "Very real. 22-year-old, award-winning, Inc. 5000 CPG agency with strong brand clients. No question they exist and are credible.",
+        "competence": "Excellent at branding and packaging. Unproven at complex Shopify ecommerce. They've built basic Shopify sites but nothing matching Greenhouse's complexity requirements.",
+        "polish": "High. Strong visual design, professional communication, award-winning creative work. The brand side is polished.",
+        "risk": "Moderate to high for this specific project. The risk is that they're a great branding agency trying to take on a complex ecommerce build that's outside their core competency. You could end up with beautiful design and weak technical execution.",
+        "stance": "Take the meeting but go in eyes-open. They may be the right branding partner but the wrong build partner. Consider splitting the engagement: Pulp+Wire for brand/creative, a dedicated Shopify agency for the technical build."
+      },
+      "agency_fit": {
+        "is_agency": true,
+        "ecommerce_fit": 4.0,
+        "strategic_depth": 7.0,
+        "execution_confidence": 4.5,
+        "taste_design_maturity": 8.5,
+        "best_fit_client": "CPG brands needing brand identity, packaging design, or visual refresh. Not complex ecommerce builds.",
+        "portfolio_assessment": "Portfolio is 80%+ branding and packaging. Web case studies exist but are design-forward, not technically complex. No evidence of subscription, multi-geo, or custom Shopify development.",
+        "operator_understanding": "They understand CPG brand positioning deeply (500+ CMOs served). But their understanding appears to be brand/shelf strategy, not ecommerce operator needs (conversion, subscription LTV, fulfillment logistics)."
+      },
+      "sources": {
+        "sender": [
+          {"label": "Naomi Davidowitz — LinkedIn", "url": "https://www.linkedin.com/in/naomi-davidowitz-0a76401/"},
+          {"label": "Naomi Davidowitz — ZoomInfo", "url": "https://www.zoominfo.com/p/Naomi-Davidowitz/1863023999"}
+        ],
+        "company": [
+          {"label": "Pulp+Wire — Website", "url": "https://pulpandwire.com"},
+          {"label": "Pulp+Wire — About", "url": "https://pulpandwire.com/about/"},
+          {"label": "Pulp+Wire — Case Studies", "url": "https://pulpandwire.com/case-studies/"},
+          {"label": "Pulp+Wire — Base Culture (Shopify build)", "url": "https://pulpandwire.com/case-study/base-culture/"},
+          {"label": "Ad Age — Small Agency of the Year", "url": "https://adage.com/article/special-report-small-agency-conference-and-awards/pulpwire-best-small-agencies-2023/2503336/"},
+          {"label": "Inc. Power Partner Awards", "url": "https://pulpandwire.com/branding-packaging/inc-power-partner-awards/"}
+        ],
+        "leadership": [
+          {"label": "Taja Dockendorf — LinkedIn", "url": "https://www.linkedin.com/in/tajadockendorf/"},
+          {"label": "Taja Dockendorf — Personal Site", "url": "https://www.tajadockendorf.com"},
+          {"label": "Taja Dockendorf — Fast Company Board", "url": "https://board.fastcompany.com/profile/Taja-Dockendorf-Owner-Pulp%2BWire/ab062361-ff9b-48cb-a7c1-dce6b6244040"}
+        ],
+        "reviews": [
+          {"label": "Clutch (0 reviews)", "url": "https://clutch.co/profile/pulp-wire"},
+          {"label": "DesignRush", "url": "https://www.designrush.com/agency/profile/pulp-wire"},
+          {"label": "Agency Spotter", "url": "https://www.agencyspotter.com/pulp-wire"},
+          {"label": "Glassdoor", "url": "https://www.glassdoor.com/Overview/Working-at-Pulp-Wire-EI_IE6157059.11,20.htm"}
+        ]
+      },
+      "discovery_questions": {
+        "key_risks": [
+          "Web/ecommerce is their secondary service (~8% of mix) — core competency is branding and packaging",
+          "No Shopify Partner designation and no evidence of complex ecommerce builds (subscription, multi-geo, fulfillment)",
+          "Leadership has no visible ecommerce or technical background — both are brand/creative/media people",
+          "Unclear whether Shopify development is in-house or subcontracted",
+          "Project requires subscription UX, multi-geo stores, Amazon FBA integration — well beyond a basic Shopify storefront"
+        ],
+        "questions": [
+          {
+            "category": "Execution",
+            "priority": "high",
+            "timing": "early",
+            "objective": "Determine whether their Shopify development is in-house or outsourced, and how deep their technical bench is.",
+            "question": "For Shopify builds — do you have in-house developers, or do you partner with an external dev team? And can you tell me who specifically would be handling the development on our project?",
+            "strong_answer": [
+              "Names specific developers (in-house or known partner agency)",
+              "Can describe the dev team's Shopify experience and past builds",
+              "Honest about what's in-house vs partnered",
+              "Has a long-standing dev partnership if not in-house"
+            ],
+            "weak_answer": [
+              "Vague about the dev team — 'we have developers'",
+              "Can't name anyone specific",
+              "Admits they'd need to find a dev partner for this project",
+              "Deflects to 'we handle the design, dev is managed'"
+            ]
+          },
+          {
+            "category": "Proof of Competence",
+            "priority": "high",
+            "timing": "early",
+            "objective": "Validate whether they've ever built anything close to the complexity Greenhouse needs.",
+            "question": "We need subscription management, two separate geo-based storefronts, and Amazon FBA fulfillment integration. Have you built anything with that level of complexity on Shopify before? Walk me through the most complex ecommerce project you've delivered.",
+            "strong_answer": [
+              "Names a specific project with comparable complexity",
+              "Describes subscription implementation details (Recharge, Bold, etc.)",
+              "Can speak to multi-geo or multi-storefront architecture",
+              "Mentions specific Shopify apps and integrations they've worked with"
+            ],
+            "weak_answer": [
+              "References only the Base Culture site (basic Shopify storefront)",
+              "Can't name any project with subscription or multi-geo complexity",
+              "Speaks in generalities about 'we can figure it out'",
+              "Pivots to talking about design quality instead of technical capability"
+            ]
+          },
+          {
+            "category": "Strategic Depth",
+            "priority": "high",
+            "timing": "early",
+            "objective": "Test whether they understand omnichannel ecommerce strategy or just brand-level thinking.",
+            "question": "Our site needs to bridge retail (Costco, Whole Foods) and DTC. Retail is primary, DTC is secondary. How would you think about the relationship between the website and our retail presence? What role does the site play?",
+            "strong_answer": [
+              "Articulates how the site supports retail discovery and purchase intent",
+              "Thinks about store locator, retailer callouts, and cross-channel UX",
+              "Understands that DTC and retail serve different customer journeys",
+              "References specific examples from other CPG clients"
+            ],
+            "weak_answer": [
+              "Defaults to 'we'll make a beautiful brand experience'",
+              "Treats the site as purely a DTC channel",
+              "Doesn't understand the retail-first, DTC-second dynamic",
+              "No examples of omnichannel thinking from past work"
+            ]
+          },
+          {
+            "category": "Team",
+            "priority": "high",
+            "timing": "middle",
+            "objective": "Understand the actual team composition and whether you're getting senior people or juniors.",
+            "question": "Beyond you, who from Pulp+Wire would be on this project day-to-day? I want to know the designer, the strategist, and the project manager — and how much of Taja's time we'd get.",
+            "strong_answer": [
+              "Names specific team members with roles",
+              "Realistic about Taja's involvement (creative reviews, not daily)",
+              "Describes a clear team structure for a project this size",
+              "Offers to introduce key team members"
+            ],
+            "weak_answer": [
+              "'We'll assemble the right team' without names",
+              "Implies Taja is hands-on daily (unlikely for a founder)",
+              "Vague about who does what",
+              "Team structure seems thin for the project scope"
+            ]
+          },
+          {
+            "category": "Risk",
+            "priority": "medium",
+            "timing": "middle",
+            "objective": "Directly assess whether they see themselves as the right fit for the technical build, or if they'd recommend splitting the work.",
+            "question": "Be honest with me — given the technical complexity of this build, do you see Pulp+Wire handling the full end-to-end, or would it make more sense for you to own brand and creative while we bring in a dedicated Shopify agency for the build?",
+            "strong_answer": [
+              "Honest assessment of their capabilities vs the scope",
+              "Open to a hybrid model if it serves the project better",
+              "Can recommend Shopify agencies they've partnered with before",
+              "Doesn't oversell their technical capability"
+            ],
+            "weak_answer": [
+              "'We can handle everything' without evidence to back it up",
+              "Gets defensive about the suggestion",
+              "No awareness that the technical scope might exceed their capability",
+              "Has never worked alongside a dedicated dev agency"
+            ]
+          },
+          {
+            "category": "Communication",
+            "priority": "medium",
+            "timing": "late",
+            "objective": "Understand how they handle a project where the client has already defined detailed requirements.",
+            "question": "I sent over a detailed requirements doc. How did that land with you? What questions did it raise, and where do you see the biggest challenges?",
+            "strong_answer": [
+              "References specific parts of the requirements doc",
+              "Identifies real challenges (geo constraints, fulfillment complexity, subscription UX)",
+              "Asks smart follow-up questions",
+              "Shows they actually read and thought about it"
+            ],
+            "weak_answer": [
+              "Generic response — 'looks great, we're excited'",
+              "Hasn't read the requirements in detail",
+              "No questions about the complex parts",
+              "Focuses only on visual/brand aspects, ignores technical requirements"
+            ]
+          }
+        ],
+        "usage_guide": {
+          "ask_first": [
+            {"index": 0, "reason": "In-house vs outsourced dev is the single most important question — determines whether they can actually build this"},
+            {"index": 1, "reason": "Complexity validation — if they've never built anything like this, you know immediately"}
+          ],
+          "ask_middle": [
+            {"index": 2, "reason": "Tests omnichannel strategic thinking vs brand-only thinking"},
+            {"index": 3, "reason": "Who does the work — critical for any agency engagement"},
+            {"index": 4, "reason": "Honesty test — do they know their limits?"}
+          ],
+          "ask_late": [
+            {"index": 5, "reason": "Tests whether they engaged with your requirements or are just selling"}
+          ],
+          "lean_in_signals": [
+            "They're honest about web being secondary and propose a hybrid model",
+            "They have a proven Shopify dev partner they can bring in",
+            "They show deep CPG brand understanding that complements a technical agency",
+            "They've read your requirements and ask smart questions about fulfillment/geo complexity"
+          ],
+          "walk_away_signals": [
+            "Claim they can handle the full technical build with no evidence",
+            "Can't name who would do the Shopify development",
+            "No awareness of the project's technical complexity",
+            "Focus entirely on brand/visual and ignore the ecommerce requirements",
+            "Get defensive when you suggest splitting brand and build"
+          ]
+        }
+      }
     }
   ]
 }
