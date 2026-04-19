@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { AssessmentStatus } from "@/lib/types";
+import { DeleteButton } from "./DeleteButton";
 
 interface Props {
   id: string;
+  companyName: string;
   status: AssessmentStatus;
   errorMessage: string | null;
   /** ISO timestamp of the row's last updated_at — used to detect stuck research. */
@@ -23,7 +25,7 @@ interface Props {
  *
  * Polls every 5s and router.refresh() so server data updates.
  */
-export function StatusBanner({ id, status, errorMessage, updatedAt }: Props) {
+export function StatusBanner({ id, companyName, status, errorMessage, updatedAt }: Props) {
   const router = useRouter();
   const triggered = useRef<string | null>(null);
   const [retrying, setRetrying] = useState(false);
@@ -85,6 +87,12 @@ export function StatusBanner({ id, status, errorMessage, updatedAt }: Props) {
         <div className="text-sm flex-1">
           <strong>Pending.</strong> Starting research…
         </div>
+        <DeleteButton
+          id={id}
+          companyName={companyName}
+          status={status}
+          variant="banner"
+        />
       </div>
     );
   }
@@ -127,6 +135,12 @@ export function StatusBanner({ id, status, errorMessage, updatedAt }: Props) {
             {retrying ? "…" : "Retry"}
           </button>
         )}
+        <DeleteButton
+          id={id}
+          companyName={companyName}
+          status={status}
+          variant="banner"
+        />
       </div>
     );
   }

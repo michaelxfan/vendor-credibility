@@ -96,19 +96,26 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ assessment: data }, { status: 200 });
 }
 
-/** DELETE /api/assessments?id=slug — delete a single assessment. */
+/**
+ * DELETE /api/assessments?id=slug — delete a single assessment.
+ *
+ * Public (no Bearer required) so the dashboard can cancel/delete directly.
+ * Symmetric with POST /api/intake which is also public. If an in-progress
+ * research call finishes after deletion, the Edge Function's update targets
+ * the now-missing id, so it no-ops silently.
+ */
 export async function DELETE(req: NextRequest) {
-  if (!authorized(req)) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  }
   const id = req.nextUrl.searchParams.get("id");
   if (!id) {
     return NextResponse.json({ error: "missing id" }, { status: 400 });
+  }
+  if (!isSupabaseConfigured()) {
+    return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
   }
   const sb = getSupabaseServer();
   const { error } = await sb.from("assessments").delete().eq("id", id);
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, id });
 }

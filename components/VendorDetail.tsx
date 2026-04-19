@@ -2,6 +2,7 @@ import type { AssessmentRow } from "@/lib/types";
 import { TIER_COLORS, aggregateColor, tierSlug } from "@/lib/ui";
 import { Accordion } from "./Accordion";
 import { StatusBanner } from "./StatusBanner";
+import { DeleteButton } from "./DeleteButton";
 import { ExecutiveSummary } from "./sections/ExecutiveSummary";
 import { EmailSummarySection } from "./sections/EmailSummarySection";
 import { SenderSection } from "./sections/SenderSection";
@@ -73,13 +74,24 @@ export function VendorDetail({ assessment: a }: Props) {
                 </>
               )}
             </div>
-            {tierColor && a.tier && (
-              <span
-                className={`inline-block mt-2 px-3 py-[3px] rounded-md text-[11px] font-semibold tracking-wide ${tierColor.bg} ${tierColor.text}`}
-              >
-                {a.tier}
-              </span>
-            )}
+            <div className="flex items-center gap-2 mt-2 flex-wrap">
+              {tierColor && a.tier && (
+                <span
+                  className={`inline-block px-3 py-[3px] rounded-md text-[11px] font-semibold tracking-wide ${tierColor.bg} ${tierColor.text}`}
+                >
+                  {a.tier}
+                </span>
+              )}
+              {/* Cancel/Delete is only shown in the header for complete/error rows.
+                  For pending/researching rows it lives in the StatusBanner. */}
+              {(a.status === "complete" || a.status === "error") && (
+                <DeleteButton
+                  id={a.id}
+                  companyName={a.company_name}
+                  status={a.status}
+                />
+              )}
+            </div>
           </div>
           {a.aggregate_score !== null && (
             <div className="text-right flex-shrink-0">
@@ -100,6 +112,7 @@ export function VendorDetail({ assessment: a }: Props) {
       <div className="px-4 py-4 md:px-10 md:py-6 max-w-[860px]">
         <StatusBanner
           id={a.id}
+          companyName={a.company_name}
           status={a.status}
           errorMessage={a.error_message}
           updatedAt={a.updated_at}
