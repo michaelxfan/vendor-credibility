@@ -34,12 +34,22 @@ export function StatusBanner({ id, status, errorMessage, updatedAt }: Props) {
   const stuck = status === "researching" && ageSec > 120;
 
   const triggerResearch = async () => {
+    // Research runs on Supabase Edge Function (Deno, 150s timeout) rather
+    // than Vercel serverless (60s on hobby). We fire the request directly
+    // from the browser so a long-running Claude call isn't bottlenecked by
+    // Vercel's function timeout.
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (!supabaseUrl) {
+      console.error("NEXT_PUBLIC_SUPABASE_URL not set");
+      return;
+    }
     try {
       setRetrying(true);
-      await fetch("/api/research", {
+      await fetch(`${supabaseUrl}/functions/v1/research`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
+        keepalive: true, // keep the request alive if the user navigates
       });
     } catch {
       // ignore — server-side recovery will still work on next poll
