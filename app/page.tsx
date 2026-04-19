@@ -35,7 +35,7 @@ export default async function Page({ searchParams }: PageProps) {
   const selected = selectedId ? await fetchAssessment(selectedId) : null;
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-full overflow-hidden">
       <Sidebar items={list} selectedId={selectedId} />
       <main className="flex-1 overflow-y-auto">
         {selected ? (
@@ -43,7 +43,7 @@ export default async function Page({ searchParams }: PageProps) {
         ) : (
           <EmptyState
             title="No vendors yet"
-            subtitle="Run the vendor-credibility Claude skill on an .eml file and it will appear here."
+            subtitle="Click “Attach email” in the sidebar to upload a vendor .eml and kick off research."
           />
         )}
       </main>
