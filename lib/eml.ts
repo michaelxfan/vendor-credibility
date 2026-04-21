@@ -137,6 +137,28 @@ function extractBody(raw: string, contentType: string | undefined): string {
   return plain || stripHtml(html) || rawBody;
 }
 
+/**
+ * Remove noisy tokens that trip prompt-injection safety filters without
+ * adding any useful signal: email client canaries like `[fn18...]`, long
+ * unbroken base64 strings, Sophos/Outlook tracking URLs, and HTML
+ * protection wrappers.
+ */
+function scrubInjectionNoise(body: string): string {
+  let out = body;
+  // [fnNN...] canaries (e.g. [fn18e3p5...] — Microsoft Office test pattern)
+  out = out.replace(/\[fn\d+[A-Za-z0-9+/=]{20,}\]/g, "[canary-stripped]");
+  // Sophos safelink wrappers — replace with a terse placeholder
+  out = out.replace(
+    /https?:\/\/[a-z0-9.-]*protection\.sophos\.com\/\?[^\s>\]]+/gi,
+    "[sophos-safelink]"
+  );
+  // Very long unbroken base64-ish blobs (≥80 chars of base64 alphabet)
+  out = out.replace(/[A-Za-z0-9+/]{80,}={0,2}/g, "[base64-blob]");
+  // Collapse repeated placeholders
+  out = out.replace(/(\[(canary-stripped|sophos-safelink|base64-blob)\][\s,]*){3,}/g, "[...stripped...]");
+  return out;
+}
+
 function extractSignature(body: string): string | null {
   // Try to cut at the quoted-reply section (lines starting with > or "On ... wrote:")
   const cutMarkers = [
@@ -202,7 +224,8 @@ export function parseEml(raw: string): ParsedEml {
   const { name: from_name, email: from_email } = parseFromHeader(fromRaw);
 
   const contentType = headers.get("content-type");
-  const body_text = extractBody(raw, contentType);
+  const rawBodyText = extractBody(raw, contentType);
+  const body_text = scrubInjectionNoise(rawBodyText);
   const signature = extractSignature(body_text);
   const website_url = extractWebsite(body_text, signature);
 

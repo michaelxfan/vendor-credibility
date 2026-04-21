@@ -4,6 +4,7 @@ import { aggregateColor } from "@/lib/ui";
 import { SearchInput } from "./SearchInput";
 import { FocusToggle } from "./FocusToggle";
 import { AttachEmailButton } from "./AttachEmailButton";
+import { MeetingInputs } from "./MeetingInputs";
 
 interface Props {
   items: AssessmentListItem[];
@@ -83,6 +84,11 @@ export function Sidebar({ items, selectedId }: Props) {
                 <div className="text-[11px] text-dim mt-0.5">
                   {item.date} · {item.sender_name ?? "—"}
                 </div>
+                <MeetingInputs
+                  id={item.id}
+                  lastMeetingAt={item.last_meeting_at}
+                  nextMeetingAt={item.next_meeting_at}
+                />
               </Link>
             );
           })

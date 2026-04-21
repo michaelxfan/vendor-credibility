@@ -6,26 +6,49 @@ export const runtime = "nodejs";
 // Pending row creation is cheap; kick off research async.
 export const maxDuration = 30;
 
+function humanizeDomain(domain: string): string {
+  return domain
+    .replace(/^www\./, "")
+    .replace(/\.(com|net|org|io|co|ca|us|ai|agency|studio|design)$/i, "")
+    .split(".")
+    .map((seg) =>
+      seg
+        .replace(/[-_]+/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase())
+    )
+    .join(" ");
+}
+
+/**
+ * Try to infer the company name from an email.
+ * Order: sender domain > signature ALL-CAPS brand line > fallback.
+ *
+ * Previously we preferred the ALL-CAPS line, but agency taglines like
+ * "OUTSMART. OUTPLAY. OUTPERFORM." can shadow the real company name. Domain
+ * is usually the safer first guess (e.g. gofishdigital.com → "Go Fish Digital").
+ */
 function guessCompanyName(parsed: ReturnType<typeof parseEml>): string {
-  // Try signature first — usually has brand prominently displayed
+  // Prefer domain — it's the most reliable signal.
+  if (parsed.domain) {
+    return humanizeDomain(parsed.domain);
+  }
+  // Fall back to signature brand line only if domain is unknown.
   if (parsed.signature) {
     const lines = parsed.signature
       .split(/\r?\n/)
       .map((l) => l.trim())
       .filter(Boolean);
-    // Look for ALL-CAPS line (common in signatures like "*BARREL*" or "PULP+WIRE")
     for (const line of lines) {
-      if (/^[A-Z][A-Z+.\s]{2,30}$/.test(line) && line.length >= 3) {
-        return line.replace(/\*+/g, "").trim();
+      const cleaned = line.replace(/\*+/g, "").trim();
+      // Skip if it looks like a tagline (multiple periods/dots, multiple words)
+      const wordCount = cleaned.split(/\s+/).length;
+      const dotCount = (cleaned.match(/\./g) ?? []).length;
+      if (dotCount >= 2 && wordCount >= 2) continue;
+      // Single-brand ALL-CAPS line
+      if (/^[A-Z][A-Z+]{1,30}$/.test(cleaned) && cleaned.length >= 3) {
+        return cleaned;
       }
     }
-  }
-  // Fall back to domain stem
-  if (parsed.domain) {
-    return parsed.domain
-      .replace(/\.(com|net|org|io|co|ca|us|ai)$/i, "")
-      .replace(/\./g, " ")
-      .replace(/\b\w/g, (c) => c.toUpperCase());
   }
   return "Unknown Vendor";
 }
@@ -117,6 +140,11 @@ export async function POST(req: NextRequest) {
       offer_summary: parsed.body_text.slice(0, 500),
       claims: [],
       cc_contacts: [],
+      // Full decoded plaintext (scrubbed of prompt-injection canaries and
+      // base64 blobs) — this is what the Edge Function hands to Claude.
+      // Much cleaner than the raw 600KB+ MIME-encoded EML.
+      body_text: parsed.body_text.slice(0, 40000),
+      signature: parsed.signature,
     },
     sources: {},
     leadership: [],

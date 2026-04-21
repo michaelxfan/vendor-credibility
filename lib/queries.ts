@@ -3,7 +3,7 @@ import { getSupabaseServerOrNull } from "./supabase/server";
 import type { AssessmentListItem, AssessmentRow } from "./types";
 
 const LIST_COLUMNS =
-  "id,date,status,tier,confidence,aggregate_score,company_name,company_domain,sender_name,take_the_meeting";
+  "id,date,status,tier,confidence,aggregate_score,company_name,company_domain,sender_name,take_the_meeting,last_meeting_at,next_meeting_at";
 
 /** Fetch all assessments, sorted by aggregate score (desc). For sidebar. */
 export async function fetchAssessmentList(): Promise<AssessmentListItem[]> {

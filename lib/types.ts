@@ -191,6 +191,9 @@ export interface AssessmentRow {
   raw_email: string | null;
   error_message: string | null;
 
+  last_meeting_at: string | null;
+  next_meeting_at: string | null;
+
   created_at: string;
   updated_at: string;
 }
@@ -207,4 +210,6 @@ export interface AssessmentListItem {
   company_domain: string | null;
   sender_name: string | null;
   take_the_meeting: boolean | null;
+  last_meeting_at: string | null;
+  next_meeting_at: string | null;
 }

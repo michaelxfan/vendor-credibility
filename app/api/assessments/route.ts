@@ -97,6 +97,66 @@ export async function POST(req: NextRequest) {
 }
 
 /**
+ * PATCH /api/assessments?id=slug — update lightweight mutable fields
+ * (currently: last_meeting_at, next_meeting_at).
+ *
+ * Accepts JSON body: { last_meeting_at?: string|null, next_meeting_at?: string|null }
+ * Values are ISO date strings (YYYY-MM-DD) or null to clear.
+ *
+ * Public like DELETE — the whole table is readable anyway, and write scope
+ * here is narrow (just two date columns on a known id).
+ */
+export async function PATCH(req: NextRequest) {
+  const id = req.nextUrl.searchParams.get("id");
+  if (!id) {
+    return NextResponse.json({ error: "missing id" }, { status: 400 });
+  }
+  if (!isSupabaseConfigured()) {
+    return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
+  }
+  let body: Record<string, unknown>;
+  try {
+    body = (await req.json()) as Record<string, unknown>;
+  } catch {
+    return NextResponse.json({ error: "invalid JSON" }, { status: 400 });
+  }
+
+  const ALLOWED = new Set(["last_meeting_at", "next_meeting_at"]);
+  const update: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(body)) {
+    if (!ALLOWED.has(k)) continue;
+    if (v === null || v === "") update[k] = null;
+    else if (typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v)) update[k] = v;
+    else
+      return NextResponse.json(
+        { error: `invalid value for ${k} (expect YYYY-MM-DD or null)` },
+        { status: 400 }
+      );
+  }
+  if (Object.keys(update).length === 0) {
+    return NextResponse.json(
+      { error: "no patchable fields in body" },
+      { status: 400 }
+    );
+  }
+
+  const sb = getSupabaseServer();
+  const { data, error } = await sb
+    .from("assessments")
+    .update(update)
+    .eq("id", id)
+    .select("id,last_meeting_at,next_meeting_at")
+    .maybeSingle();
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+  if (!data) {
+    return NextResponse.json({ error: "not found" }, { status: 404 });
+  }
+  return NextResponse.json({ ok: true, ...data });
+}
+
+/**
  * DELETE /api/assessments?id=slug — delete a single assessment.
  *
  * Public (no Bearer required) so the dashboard can cancel/delete directly.

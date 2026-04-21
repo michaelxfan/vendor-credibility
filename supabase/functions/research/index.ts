@@ -155,7 +155,7 @@ Deno.serve(async (req) => {
   const { data: row, error: readErr } = await sb
     .from("assessments")
     .select(
-      "id,status,raw_email,company_name,sender_name,sender_email,company_domain,updated_at"
+      "id,status,raw_email,email_summary,company_name,sender_name,sender_email,company_domain,updated_at"
     )
     .eq("id", id)
     .maybeSingle();
@@ -187,6 +187,16 @@ Deno.serve(async (req) => {
     .update({ status: "researching", error_message: null })
     .eq("id", id);
 
+  // Prefer decoded, cleaned body_text (set by /api/intake). Fall back to raw
+  // EML only if it's missing. The raw EML is MIME-encoded garbage that
+  // triggers Claude's prompt-injection safety filter; the decoded body is
+  // human-readable text.
+  // deno-lint-ignore no-explicit-any
+  const summary = (row as any).email_summary;
+  const bodyForClaude: string =
+    summary?.body_text ?? row.raw_email.slice(0, 40000);
+  const bodyLabel = summary?.body_text ? "Email body (decoded)" : "Raw email (MIME)";
+
   const userMessage = `Today is ${new Date().toISOString().slice(0, 10)}.
 
 Use the id "${id}" in your output.
@@ -196,13 +206,14 @@ Hints (confirm via web_search):
 - Sender: ${row.sender_name ?? "(unknown)"}
 - Email: ${row.sender_email ?? "(unknown)"}
 - Domain: ${row.company_domain ?? "(unknown)"}
+- Subject: ${summary?.subject ?? "(unknown)"}
 
-Raw email:
+${bodyLabel}:
 \`\`\`
-${row.raw_email.slice(0, 40000)}
+${bodyForClaude}
 \`\`\`
 
-Research and emit the <assessment> JSON block.`;
+Research the sender's company via web_search and emit the <assessment> JSON block.`;
 
   try {
     const resp = await fetch("https://api.anthropic.com/v1/messages", {
@@ -247,8 +258,13 @@ Research and emit the <assessment> JSON block.`;
     const text = texts.join("\n");
     const match = text.match(/<assessment>\s*([\s\S]+?)\s*<\/assessment>/);
     if (!match) {
+      if (data.stop_reason === "refusal") {
+        throw new Error(
+          "Claude's safety filter declined to process this email. This usually happens when the email contains unusual encoded content (base64 blobs, tracking canaries). Try uploading a simpler version of the email, or use the Claude skill locally."
+        );
+      }
       throw new Error(
-        `No <assessment> block (stop_reason=${data.stop_reason}). Preview: ${text.slice(0, 400)}`
+        `Claude returned no <assessment> block (stop_reason=${data.stop_reason}). Preview: ${text.slice(0, 400)}`
       );
     }
 
